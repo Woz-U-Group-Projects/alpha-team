@@ -2,7 +2,7 @@ const serverHost="localhost";
 var http = require('http');
 var url = require('url');
 var https = require('https');
-var twitch= require('/twitch.js');
+var twitch= require('./twitch.js');
 twitch.getSSL("api.twitch.tv/kraken/users/44322889");
 http.createServer(function (req, res) {
     console.log(req["url"]);

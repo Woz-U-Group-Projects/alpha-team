@@ -3,9 +3,21 @@ var url = require('url');
 var https = require('https');
 
 //this function will be used mostly for twitch api
-exports.getSSL=function(Url){
-    Url+="?client_id=gxnsm64vnuninzu8f9whol09b82pqx";
-    Url=url.parse(Url,true;);
+exports.getSSL=function(Url, clientAdd=true){
+ 
+
+    Url=url.parse(Url,true);
+    var qdata=Url.query;
+    if(qdata.client_id==undefined && clientAdd==true)
+    {
+        if(Url.search==""){
+    Url.search="client_id=gxnsm64vnuninzu8f9whol09b82pqx";
+        }
+        else
+        {
+            Url.search+="&client_id=gxnsm64vnuninzu8f9whol09b82pqx";
+        }
+    }
     
 var options = {
   host: Url.host,
@@ -27,8 +39,9 @@ req.on('error', function(e) {
   console.log('problem with request: ' + e.message);
 });
 req.end();
+
 }
-//getSSL("api.twitch.tv/kraken/users/44322889");
+
 
 //this function will verify the OAuth token is valid
 exports.validateOAuth=function(oAuth,userName){
