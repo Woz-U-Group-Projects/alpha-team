@@ -28,6 +28,27 @@ console.log(default_doc[0]);
       
      
   }
+  function isStatic(filename,callback){
+      var ret=true;
+      if(filename[filename.length-1]!="/")
+      {
+          filename+="/";
+      }
+      filename+="static.js";
+fs.readFile(filename, function(err, data) {
+      
+    if(data==false||data=="false"){
+       
+        ret=false;
+        
+    }
+    if(typeof(callback)=="function"){
+    callback(ret);
+    }
+  });
+
+  
+  }
 http.createServer(function (req, res) {
   var q = url.parse(req.url, true);
   console.log(q.pathname)
@@ -38,7 +59,24 @@ http.createServer(function (req, res) {
       if(q.pathname[q.pathname.length-1]!="/"){
        filename+="/";
       }
-getDefaultDoc(res,filename);
+isStatic("./serverroot"+q.pathname,function(static){  
+if(static){
+    getDefaultDoc(res,filename);
+    }
+
+
+else
+{
+    getdoc=require("./serverroot"+q.pathname);
+    if(getdoc.start==undefined){
+      res.writeHead(404, {'Content-Type': 'text/html'});
+      return res.end("404 Not Found");  
+    }
+    else{
+    getdoc.start(req,res);
+    }
+}
+});
   }
   else
     fs.readFile(filename, function(err, data) {
