@@ -11,7 +11,7 @@ exports.getSSL=function(Url, clientAdd=true){
     if(qdata.client_id==undefined && clientAdd==true)
     {
         if(Url.search==""){
-    Url.search="client_id=gxnsm64vnuninzu8f9whol09b82pqx";
+    Url.search="?client_id=gxnsm64vnuninzu8f9whol09b82pqx";
         }
         else
         {
@@ -25,7 +25,7 @@ var options = {
   path: Url.pathname+Url.search,
   method: "GET"
 };
-
+console.log("requesting resource:"+Url.host+":443");
 var req = https.request(options, function(res) {
   console.log('STATUS: ' + res.statusCode);
   console.log('HEADERS: ' + JSON.stringify(res.headers));
