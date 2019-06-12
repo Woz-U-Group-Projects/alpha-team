@@ -1,41 +1,50 @@
 const serverHost="localhost";
-var http = require('http');
 var url = require('url');
-var https = require('https');
 var twitch= require('./twitch.js');
 var fs = require('fs');
+var express = require('express');
+var cookie = require('./cookie.js');
+var app = express();
+var path = require('path');
 var default_doc=["index.html","index.htm"];
+cookie.start(app);
 console.log(default_doc[0]);
 //twitch.getSSL("https://api.twitch.tv/kraken/users/44322889");
-  function getDefaultDoc(res,filename,i=0){
+  function getDefaultDoc(req,res,filename,callback,i=0){
+      var ret=null;
       if((i>=default_doc.length))
       {
-      res.writeHead(404, {'Content-Type': 'text/html'});
-      return res.end("404 Not Found");
+      return null;
       }
       console.log("Checking url: "+filename+default_doc[i])
     fs.readFile(filename+default_doc[i], function(err, data) {
             if (err) {
-    getDefaultDoc(res,filename,i+1);
+    getDefaultDoc(req,res,filename,callback,i+1);
     }
     else{
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.write(data);
-    return res.end();
+        ret="/wwwroot/";
+        var q = url.parse(req.url, true);
+      if(q.pathname[q.pathname.length-1]!="/"){
+       ret+="/";
+      }
+    ret+=default_doc[i];
+    if(typeof(callback)=="function"){
+        callback(ret);
+    }
     }
       });
    
       
      
-  }
-  function isStatic(filename,callback){
+    }
+function isStatic(filename,callback){
       var ret=true;
       if(filename[filename.length-1]!="/")
       {
           filename+="/";
       }
       filename+="static.js";
-fs.readFile(filename, function(err, data) {
+ fs.readFile(filename, function(err, data) {
       
     if(data==false||data=="false"){
        
@@ -48,10 +57,11 @@ fs.readFile(filename, function(err, data) {
   });
 
   
-  }
-http.createServer(function (req, res) {
+ }
+
+ app.get("(/*)?",function (req,res){
   var q = url.parse(req.url, true);
-  console.log(q.pathname)
+  console.log(q.pathname);
   var filename = "./wwwroot/" + q.pathname;
 
   if(q.pathname.split(".").length==1){  
@@ -61,16 +71,19 @@ http.createServer(function (req, res) {
       }
 isStatic("./serverroot"+q.pathname,function(static){  
 if(static){
-    getDefaultDoc(res,filename);
+    console.log("is static");
+    getDefaultDoc(req,res,filename,function(requestPath){
+        console.log("filename: "+q.pathname);   
+            console.log("\n sendFile("+requestPath+");");        
+            res.sendFile(path.join(__dirname+requestPath)); 
+    });
     }
-
-
 else
 {
     getdoc=require("./serverroot"+q.pathname);
     if(getdoc.start==undefined){
       res.writeHead(404, {'Content-Type': 'text/html'});
-      return res.end("404 Not Found");  
+      return res.end("404 Not Found");   
     }
     else{
     getdoc.start(req,res);
