@@ -3,8 +3,10 @@ var url = require('url');
 var https = require('https');
 
 //this function will be used mostly for twitch api
+//Makes a get request to the following url through https protocol.
 exports.getSSL=function(Url, clientAdd=true){
- 
+  //clientAdd is a boolean should we add our client_id at the end of the url.
+ //the client_id is a requirement by twitch to identify who is making a request to their API
 
     Url=url.parse(Url,true);
     var qdata=Url.query;
