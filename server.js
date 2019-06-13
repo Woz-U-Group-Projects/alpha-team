@@ -1,6 +1,8 @@
 // setting variable
 const serverHost="localhost";
 
+require("dotenv").config();
+
 //getting modules
 var url = require('url');
 var twitch= require('./twitch.js');

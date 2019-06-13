@@ -67,7 +67,10 @@ var req = https.request(options, function(res) {
       console.log(chunk);
       if(typeof(callback)=="function")
       {
-          callback(chunk);
+        var ret=callback(chunk,res.statusCode)
+          if(ret!=undefined){
+            return ret;
+          }
       }
     console.log('BODY: ' + chunk);
   });
@@ -100,7 +103,10 @@ var req = https.request(options, function(res) {
       console.log(chunk);
       if(typeof(callback)=="function"){
           
-          callback(chunk);
+          var ret=callback(chunk,res.statusCode)
+          if(ret!=undefined){
+            return ret;
+          }
       }
   });
 });
