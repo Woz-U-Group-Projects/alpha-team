@@ -1,0 +1,19 @@
+{
+  "name": "mysql",
+  "version": "1.0.0",
+  "description": "Music Queue",
+  "main": "demo_db_connection.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Woz-U-Group-Projects/alpha-team.git"
+  },
+  "author": "Justin, Joseph, Steven, Stefan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Woz-U-Group-Projects/alpha-team/issues"
+  },
+  "homepage": "https://github.com/Woz-U-Group-Projects/alpha-team#readme"
+}
