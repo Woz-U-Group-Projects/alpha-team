@@ -5,7 +5,7 @@ var https = require('https');
 //this function will be used mostly for twitch api
 exports.getSSL=function(Url){
     Url+="?client_id=gxnsm64vnuninzu8f9whol09b82pqx";
-    Url=url.parse(Url,true;);
+    Url=url.parse(Url,true);
     
 var options = {
   host: Url.host,
