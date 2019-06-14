@@ -1,9 +1,10 @@
 // setting variable
 const serverHost="localhost";
+var default_doc=["index.html","index.htm"]; //this is the default document example localhost/ should point to localhost/index.html
 
-require("dotenv").config();
 
 //getting modules
+require("dotenv").config();
 var url = require('url');
 var twitch= require('./twitch.js');
 var fs = require('fs');
@@ -11,7 +12,6 @@ var express = require('express');
 var cookie = require('./cookie.js');
 var app = express();
 var path = require('path');
-var default_doc=["index.html","index.htm"]; //this is the default document example localhost/ should point to localhost/index.html
 //end of modules
 cookie.start(app);//initializes cookies functionality within express
 //twitch.getSSL("https://api.twitch.tv/kraken/users/44322889"); // was an example of using twitch's api

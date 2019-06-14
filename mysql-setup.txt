@@ -1,0 +1,4 @@
+CREATE DATABASE songrequest;
+CREATE USER 'alpha'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT all on songrequest.* to 'alpha'@'localhost';
+FLUSH PRIVILEGES;

@@ -50,11 +50,11 @@ exports.postSSL=function(Url,data,callback)
 var options = {
   host: Url.host,
   port: 443,
-  path: Url.pathname,
+  path: Url.pathname+Url.search,
   method: 'POST',
    headers: {
        'Content-Type': 'application/json',
-       'Content-Length': data.length
+       'Content-Length': data==undefined?0:data.length
      }
      
 };
