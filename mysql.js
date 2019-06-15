@@ -44,11 +44,11 @@ exports.tableExists=function(table,callback){
 }
 exports.getOauth=function(user,callback){
    exports.tableExists("oauth",function(_exists){
-     if(_exists){
+     if(_exists && user!=undefined){
     con.query("select auth from oauth where nick='"+user+"'", function (err,result,fields){
-      console.log(result[0]);
+      console.log(result);
       if(typeof(callback)=="function"){
-      callback(result[0].auth);
+        result[0]!=undefined?callback(result[0].auth):callback();
       }
     });
   }
@@ -63,9 +63,10 @@ exports.getOauth=function(user,callback){
   {
 
      if(typeof(columns)=="string" && typeof(value)=="string"){    
-     
-      
-      con.query("update "+table +"set "+updateCol+"='"+newVal+"' where "+columns+"='"+value+"'", function (err,result,fields){
+     //console.log("mysql statement:");
+      //console.log("update "+table +" set "+updateCol+"='"+newVal+"' where "+columns+"='"+value+"'");
+      con.query("update "+table +" set "+updateCol+"='"+newVal+"' where "+columns+"='"+value+"'", function (err,result,fields){
+        if(err) throw err;
         console.log(result);
       });
       

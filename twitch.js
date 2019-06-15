@@ -54,7 +54,7 @@ var options = {
   method: 'POST',
    headers: {
        'Content-Type': 'application/json',
-       'Content-Length': data==undefined?0:data.length
+       'Content-Length': data.length
      }
      
 };

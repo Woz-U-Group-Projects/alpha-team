@@ -7,7 +7,7 @@ exports.start=function(req,res){
     var client_id=process.env.client_id;
 var client_secret=process.env.client_secret;//this must be kept confidential
 console.log(client_secret);
-var redirect_uri="http://localhost/login";
+var redirect_uri="http://localhost/api/login";
 var code;
 
    Url=url.parse(req.url,true);
