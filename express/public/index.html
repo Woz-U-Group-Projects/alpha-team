@@ -2,266 +2,157 @@
 <html>
 
 <head>
-    <style type="text/css">
-        @charset "UTF-8";
-        [ng\:cloak],
-        [ng-cloak],
-        [data-ng-cloak],
-        [x-ng-cloak],
-        .ng-cloak,
-        .x-ng-cloak,
-        .ng-hide:not(.ng-hide-animate) {
-            display: none !important;
-        }
-        
-        ng\:form {
-            display: block;
-        }
-        
-        .ng-animate-shim {
-            visibility: hidden;
-        }
-        
-        .ng-anchor {
-            position: absolute;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
     <meta charset="utf-8">
-    <title ng-bind="'Nightbot - ' + $state.current.title" class="ng-binding">Nightbot - Song Requests</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <base href="/">
-    <link rel="stylesheet" href="styles/vendor-28e60fd1.css">
-    <link rel="stylesheet" href="styles/app-dda9b27e.css">
-    <script type="text/javascript" id="www-widgetapi-script" src="https://s.ytimg.com/yts/jsbin/www-widgetapi-vfll-F3yY/www-widgetapi.js" async=""></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
-
-
-<head>
-    <title>Express</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
-</head>
-<div ui-view="" class="ng-scope">
-    <!-- uiView: undefined -->
-    <ui-view class="ng-scope" style="">
-        <div class="row wrapper border-bottom white-bg page-heading ng-scope">
-            <div class="col-lg-6 pull-left">
-                <h2 ng-bind="$state.current.title" class="ng-binding">Song Requests</h2>
-                <ol class="breadcrumb">
-                    <li><a ui-sref="panel.dashboard" href="/dashboard">Home</a></li>
-                    <li class="active"><strong ng-bind="$state.current.title" class="ng-binding">Song Requests</strong></li>
-                </ol>
-            </div>
-            <div class="col-lg-6 pull-right" style="text-align: right;bottom: -25px;padding-bottom: 25px;"><button class="btn btn-primary ng-binding" type="button" ng-click="toggle()"><i class="fa fa-power-off"></i> Enable</button> <button class="btn btn-primary" type="button" ng-click="clear()"><i class="fa fa-trash"></i> Clear Queue</button>                <button class="btn btn-primary" type="button" ng-click="add()"><i class="fa fa-plus"></i> Request Song</button> <button class="btn btn-primary" type="button" ng-click="editSettings()"><i class="fa fa-gear"></i> Settings</button></div>
-        </div>
-        <player-controls player="player" queue="queue" settings="settings" stats="stats" class="ng-scope ng-isolate-scope">
-            <style>
-                .slider .slider-handle {
-                    display: none;
-                }
-                
-                .slider-selection {
-                    background-image: none;
-                    background: #337ab7;
-                }
-                
-                .autodj-controls {
-                    background-color: rgb(218, 227, 234);
-                    padding: 25px;
-                }
-                
-                .autodj-controls .pause-play-container {
-                    display: inline-block;
-                    width: 140px;
-                }
-                
-                .autodj-controls .song-progress {
-                    display: inline-block;
-                    width: calc(100% - 340px);
-                    margin-right: 50px;
-                }
-                
-                .autodj-controls .song-progress .song-progress-time {
-                    width: 45px;
-                    display: inline-block;
-                    line-height: 22px;
-                }
-                
-                .autodj-controls .song-progress .song-progress-slider {
-                    display: inline-block;
-                    width: calc(100% - 90px);
-                }
-                
-                .autodj-controls .song-progress .song-progress-slider .slider {
-                    width: 100%;
-                }
-                
-                .autodj-controls .song-volume {
-                    display: inline-block;
-                    width: 150px;
-                }
-                
-                .autodj-controls .song-volume button {
-                    display: inline-block;
-                }
-                
-                .autodj-controls .song-volume .song-volume-slider {
-                    display: inline-block;
-                    width: calc(100% - 25px);
-                }
-                
-                .autodj-controls .song-volume .song-volume-slider .slider {
-                    width: 100%;
-                }
-                
-                .autodj-controls .btn:focus {
-                    outline: 0;
-                }
-            </style>
-            <div class="row wrapper border-bottom ng-scope autodj-controls" style="">
-                <div class="col-lg-12">
-                    <div class="pause-play-container"><button class="btn btn-lg btn-primary btn-circle btn-outline" type="button" ng-click="toggle()"><i class="fa fa-pause ng-hide" ng-show="stats.playing" style=""></i><i class="fa fa-play" ng-show="!stats.playing" style=""></i></button>                        <button class="btn btn-primary btn-outline" type="button" ng-click="skip()"><i class="fa fa-step-forward"></i></button></div>
-                    <div class="song-progress hidden-xs">
-                        <div class="song-progress-time ng-binding">03:28</div>
-                        <div class="song-progress-slider ng-isolate-scope ng-valid" style="" ng-model="stats.progress" min="0" step="1" max="stats.duration" on-stop-slide="seekTo(value)" slider-tooltip="hide">
-                            <div class="slider slider-horizontal" id="" style="width: 100%;">
-                                <div class="slider-track">
-                                    <div class="slider-track-low" style="left: 0px; width: 0%;"></div>
-                                    <div class="slider-selection" style="left: 0%; width: 74.2349%;"></div>
-                                    <div class="slider-track-high" style="right: 0px; width: 25.7651%;"></div>
-                                    <div class="slider-handle min-slider-handle round" tabindex="0" style="left: 74.2349%;"></div>
-                                    <div class="slider-handle max-slider-handle round hide" tabindex="0" style="left: 0%;"></div>
-                                </div>
-                                <div class="tooltip tooltip-main top hide" style="left: 74.2349%; margin-left: 0px;">
-                                    <div class="tooltip-arrow"></div>
-                                    <div class="tooltip-inner">208.6</div>
-                                </div>
-                                <div class="tooltip tooltip-min top hide">
-                                    <div class="tooltip-arrow"></div>
-                                    <div class="tooltip-inner"></div>
-                                </div>
-                                <div class="tooltip tooltip-max hide top" style="">
-                                    <div class="tooltip-arrow"></div>
-                                    <div class="tooltip-inner"></div>
-                                </div>
-                            </div><input class="slider-input" type="text" style="width: 100%; display: none;" value="208.6" data="value: '208.6'"></div>
-                        <div class="song-progress-time text-right ng-binding">04:41</div>
-                    </div>
-                    <div class="song-volume"><button class="btn btn-xs btn-link ng-hide" type="button" ng-show="muted || settings.volume === 0" ng-click="unmute()"><i class="fa fa-volume-off"></i></button> <button class="btn btn-xs btn-link ng-hide" type="button" ng-show="!muted &amp;&amp; settings.volume < 50 &amp;&amp; settings.volume > 0"
-                            ng-click="mute()"><i class="fa fa-volume-down"></i></button> <button class="btn btn-xs btn-link" type="button" ng-show="!muted &amp;&amp; settings.volume >= 50" ng-click="mute()"><i class="fa fa-volume-up"></i></button>
-                        <div class="song-volume-slider ng-isolate-scope ng-valid" ng-model="settings.volume" min="0" step="1" max="100">
-                            <div class="slider slider-horizontal" id="" style="width: 100%;">
-                                <div class="slider-track">
-                                    <div class="slider-track-low" style="left: 0px; width: 0%;"></div>
-                                    <div class="slider-selection" style="left: 0%; width: 75%;"></div>
-                                    <div class="slider-track-high" style="right: 0px; width: 25%;"></div>
-                                    <div class="slider-handle min-slider-handle round" tabindex="0" style="left: 75%;"></div>
-                                    <div class="slider-handle max-slider-handle round hide" tabindex="0" style="left: 0%;"></div>
-                                </div>
-                                <div class="tooltip tooltip-main top" style="left: 75%; margin-left: -14.5px;">
-                                    <div class="tooltip-arrow"></div>
-                                    <div class="tooltip-inner">75</div>
-                                </div>
-                                <div class="tooltip tooltip-min top" style="display: none;">
-                                    <div class="tooltip-arrow"></div>
-                                    <div class="tooltip-inner"></div>
-                                </div>
-                                <div class="tooltip tooltip-max bottom" style="top: 18px; display: none;">
-                                    <div class="tooltip-arrow"></div>
-                                    <div class="tooltip-inner"></div>
-                                </div>
-                            </div><input class="slider-input" type="text" style="width: 100%; display: none;" value="75" data="value: '75'"></div>
-                    </div>
-                </div>
-            </div>
-        </player-controls>
-        <div class="row ng-scope" style="margin-top: 25px;">
-            <div class="col-md-12">
-                <div class="alert alert-warning alert-dismissable"><button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button> Unfortunately Spotify has discontinued the RPC api we were using to control Spotify, so support for it has been removed. Due to licensing issues it's
-                    unlikely Spotify integration will return.</div>
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Current Song</h5>
-                    </div>
-                    <div class="row ibox-content no-margins">
-                        <div class="col-md-12 ng-hide" ng-hide="queue.current" style="">Nothing playing</div>
-                        <div style="float: left;margin-right: 25px;">
-                            <youtube-player players="players" queue="queue" settings="settings" stats="stats" class="ng-isolate-scope" style="display: none;">
-                                <script src="https://www.youtube.com/iframe_api"></script><iframe id="yt_player" frameborder="0" allowfullscreen="1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title="YouTube video player" width="400" height="225" src="https://www.youtube.com/embed/?controls=2&amp;disablekb=1&amp;showinfo=0&amp;cc_load_policy=0&amp;iv_load_policy=3&amp;fs=0&amp;origin=https%3A%2F%2Fbeta.nightbot.tv&amp;rel=0&amp;enablejsapi=1&amp;widgetid=2"></iframe></youtube-player>
-                            <soundcloud-player players="players" queue="queue" settings="settings" stats="stats" class="ng-isolate-scope" style="left: 35px; position: static;">
-                                <script src="https://w.soundcloud.com/player/api.js"></script><iframe id="sc_player" width="225" height="225" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/monstercat/varien-sacred-woods&amp;auto_play=true&amp;buying=false&amp;liking=false&amp;download=false&amp;sharing=false&amp;show_artwork=true&amp;show_comments=false&amp;show_playcount=false&amp;show_user=false&amp;visual=true&amp;start_track=0"></iframe></soundcloud-player>
-                        </div>
-                        <div class="current-track" ng-show="queue.current" style="float: left; margin-top: 25px;">
-                            <h4><strong class="ng-binding">Varien - Sacred Woods (feat. Skyelle)<!-- ngIf: queue.current.track.artist --><span ng-if="queue.current.track.artist" class="ng-binding ng-scope" style="">&nbsp;—&nbsp;Monstercat</span><!-- end ngIf: queue.current.track.artist --></strong></h4>
-                            <p class="ng-binding"><i class="fa fa-clock-o"></i> 04:41</p>
-                            <p><i class="fa fa-link"></i> <a ng-href="https://soundcloud.com/monstercat/varien-sacred-woods" target="_blank" class="ng-binding" href="https://soundcloud.com/monstercat/varien-sacred-woods">https://soundcloud.com/monstercat/varien-sacred-woods</a></p>
-                            <p class="ng-binding"><i class="fa fa-user"></i> stefanmitrano</p>
-                            <p><button class="btn btn-primary btn-xs ng-hide" type="button" ng-click="saveToPlaylist(queue.current.track.url)" ng-show="queue.current.user.displayName &amp;&amp; settings.playlist === 'channel'"><i class="fa fa-bookmark"></i> Save to Channel Playlist</button></p>
-                            <p>
-                                <a href="https://monstercat.com" target="_blank"><img src="assets/images/powered_by_monstercat.png" ng-show="(settings.playlist === 'monstercat' &amp;&amp; settings.limits.playlistOnly === true) || (settings.playlist === 'monstercat' &amp;&amp; !queue.current.user)" width="88"
-                                        height="25" class="ng-hide" style=""></a>
-                                <a href="http://music.twitch.tv" target="_blank"><img src="assets/images/powered_by_twitch_music_library.png" ng-show="(settings.playlist === 'twitch_music_library' &amp;&amp; settings.limits.playlistOnly === true) || (settings.playlist === 'twitch_music_library' &amp;&amp; !queue.current.user)"
-                                        height="25" width="46" class="ng-hide"></a>
-                                <a href="https://soundcloud.com" target="_blank"><img src="assets/images/powered_by_soundcloud.png" ng-show="queue.current.track.provider === 'soundcloud'" width="52" height="16" class="" style=""></a>
-                                <a href="https://youtube.com" target="_blank"><img src="assets/images/powered_by_youtube.png" ng-show="queue.current.track.provider === 'youtube'" width="52" height="25" class="ng-hide"></a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row ng-scope" style="padding-bottom: 25px;">
-            <div class="col-md-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>Queue</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Title</th>
-                                    <th class="hidden-xs">Artist</th>
-                                    <th class="hidden-xs">User</th>
-                                    <th class="hidden-sm">Length</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- ngRepeat: item in queue.items -->
-                                <!-- ngRepeat: item in playlist.items -->
-                                <tr ng-repeat="item in playlist.items" style="color: #A2A2A2;" class="ng-scope">
-                                    <td ng-bind="item._position" class="ng-binding">3</td>
-                                    <td ng-bind="item.track.title" class="ng-binding">000</td>
-                                    <td class="hidden-xs ng-binding">000</td>
-                                    <td class="hidden-xs">000</td>
-                                    <td class="hidden-sm ng-binding">time</td>
-                                    <td>-</td>
-                                </tr>
-                                <!-- end ngRepeat: item in playlist.items -->
-                                <tr ng-repeat="item in playlist.items" style="color: #A2A2A2;" class="ng-scope">
-                                    <td ng-bind="item._position" class="ng-binding">4</td>
-                                    <td ng-bind="item.track.title" class="ng-binding">000</td>
-                                    <td class="hidden-xs ng-binding">000</td>
-                                    <td class="hidden-xs">000</td>
-                                    <td class="hidden-sm ng-binding">time</td>
-                                    <td>-</td>
-                                </tr>
-
-                                </tr>
-                                <!-- end ngRepeat: item in playlist.items -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ui-view>
+<style>
+    .slider-handle {
+        display: none;
+    }
+    
+    .slider-selection {
+        background-image: none;
+        background: #337ab7;
+    }
+    
+    .autodj-controls {
+        background-color: rgb(218, 227, 234);
+        padding: 25px;
+    }
+    
+    .autodj-controls .pause-play-container {
+        display: inline-block;
+        width: 140px;
+    }
+    
+    .autodj-controls .song-progress {
+        display: inline-block;
+        width: calc(100% - 340px);
+        margin-right: 50px;
+    }
+    
+    .autodj-controls .song-progress .song-progress-time {
+        width: 45px;
+        display: inline-block;
+        line-height: 22px;
+    }
+    
+    .autodj-controls .song-progress .song-progress-slider {
+        display: inline-block;
+        width: calc(100% - 90px);
+    }
+    
+    .autodj-controls .song-progress .song-progress-slider .slider {
+        width: 100%;
+    }
+    
+    .autodj-controls .song-volume {
+        display: inline-block;
+        width: 150px;
+    }
+    
+    .autodj-controls .song-volume button {
+        display: inline-block;
+    }
+    
+    .autodj-controls .song-volume .song-volume-slider {
+        display: inline-block;
+        width: calc(100% - 25px);
+    }
+    
+    .autodj-controls .song-volume .song-volume-slider .slider {
+        width: 100%;
+    }
+    
+    .autodj-controls .btn:focus {
+        outline: 0;
+    }
+</style>
+<div class="home button">
+    <Button id="Login">Login</Button>
 </div>
 
 
+</div>
+<div class="row ibox-content no-margins">
+    <div class="col-md-12 ng-hide" ng-hide="queue.current" style="">Nothing playing</div>
+    <div style="float: left;margin-right: 25px;">
+        <youtube-player players="players" queue="queue" settings="settings" stats="stats" class="ng-isolate-scope" style="display: none;">
+            <script src="https://www.youtube.com/iframe_api"></script><iframe id="yt_player" frameborder="0" allowfullscreen="1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title="YouTube video player" width="400" height="225" src="https://www.youtube.com/embed/?controls=2&amp;disablekb=1&amp;showinfo=0&amp;cc_load_policy=0&amp;iv_load_policy=3&amp;fs=0&amp;origin=https%3A%2F%2Fbeta.nightbot.tv&amp;rel=0&amp;enablejsapi=1&amp;widgetid=1"></iframe></youtube-player>
+        <soundcloud-player players="players" queue="queue" settings="settings" stats="stats" class="ng-isolate-scope" style="left: 35px; position: static;">
+            <script src="https://w.soundcloud.com/player/api.js"></script><iframe id="sc_player" width="225" height="225" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/monstercat/varien-sacred-woods&amp;auto_play=true&amp;buying=false&amp;liking=false&amp;download=false&amp;sharing=false&amp;show_artwork=true&amp;show_comments=false&amp;show_playcount=false&amp;show_user=false&amp;visual=true&amp;start_track=0"></iframe></soundcloud-player>
+    </div>
+    <div class="current-track" ng-show="queue.current" style="float: left; margin-top: 25px;">
+        <h4><strong class="ng-binding">Varien - Sacred Woods (feat. Skyelle)<!-- ngIf: queue.current.track.artist --><span ng-if="queue.current.track.artist" class="ng-binding ng-scope" style="">&nbsp;—&nbsp;Monstercat</span><!-- end ngIf: queue.current.track.artist --></strong></h4>
+        <p class="ng-binding"><i class="fa fa-clock-o"></i> 04:41</p>
+        <p><i class="fa fa-link"></i> <a ng-href="https://soundcloud.com/monstercat/varien-sacred-woods" target="_blank" class="ng-binding" href="https://soundcloud.com/monstercat/varien-sacred-woods">https://soundcloud.com/monstercat/varien-sacred-woods</a></p>
+        <p class="ng-binding"><i class="fa fa-user"></i> stefanmitrano</p>
+        <p><button class="btn btn-primary btn-xs ng-hide" type="button" ng-click="saveToPlaylist(queue.current.track.url)" ng-show="queue.current.user.displayName &amp;&amp; settings.playlist === 'channel'"><i class="fa fa-bookmark"></i> Save to Channel Playlist</button></p>
+        <p>
+            <a href="https://monstercat.com" target="_blank"><img src="assets/images/powered_by_monstercat.png" ng-show="(settings.playlist === 'monstercat' &amp;&amp; settings.limits.playlistOnly === true) || (settings.playlist === 'monstercat' &amp;&amp; !queue.current.user)" width="88" height="25"
+                    class="ng-hide" style=""></a>
+            <a href="http://music.twitch.tv" target="_blank"><img src="assets/images/powered_by_twitch_music_library.png" ng-show="(settings.playlist === 'twitch_music_library' &amp;&amp; settings.limits.playlistOnly === true) || (settings.playlist === 'twitch_music_library' &amp;&amp; !queue.current.user)"
+                    height="25" width="46" class="ng-hide"></a>
+            <a href="https://soundcloud.com" target="_blank"><img src="assets/images/powered_by_soundcloud.png" ng-show="queue.current.track.provider === 'soundcloud'" width="52" height="16" class="" style=""></a>
+            <a href="https://youtube.com" target="_blank"><img src="assets/images/powered_by_youtube.png" ng-show="queue.current.track.provider === 'youtube'" width="52" height="25" class="ng-hide"></a>
+        </p>
+    </div>
+</div>
+<div class="row ng-scope" style="padding-bottom: 25px;">
+    <div class="col-md-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Queue</h5>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th class="hidden-xs">Artist</th>
+                            <th class="hidden-xs">User</th>
+                            <th class="hidden-sm">Length</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- ngRepeat: item in queue.items -->
+                        <!-- ngRepeat: item in playlist.items -->
+                        <tr ng-repeat="item in playlist.items" style="color: rgb(162, 162, 162);" class="ng-scope">
+                            <td ng-bind="item._position" class="ng-binding">1</td>
+                            <td ng-bind="item.track.title" class="ng-binding">Droptek &amp; Vorso - Smog</td>
+                            <td class="hidden-xs ng-binding">Monstercat</td>
+                            <td class="hidden-xs">Playlist</td>
+                            <td class="hidden-sm ng-binding">03:34</td>
+                            <td>-</td>
+                        </tr>
+
+                        <!-- end ngRepeat: item in playlist.items -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</player-controls>
+<!-- ngInclude: 'components/common/footer.html' -->
+<div ng-include="'components/common/footer.html'" class="ng-scope">
+    <div class="footer ng-scope" ng-hide="$state.current.altBackground">
+        <div class="pull-right"><a href="https://api-docs.nightbot.tv" target="_blank">API Docs</a> · <a href="/terms" ui-sref="panel.terms">Terms of Service</a> · <a href="/privacy" ui-sref="panel.privacy">Privacy Policy</a></div>
+        <div class="ng-binding"><strong>Copyright</strong> © 2019 NightDev, LLC. All Rights Reserved.</div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+<script async="" src="//www.google-analytics.com/analytics.js"></script>
+<script src="scripts/vendor-36d7c2a1.js"></script>
+<script src="scripts/app-e5cfb458.js"></script>
+</body>
 
 </html>
