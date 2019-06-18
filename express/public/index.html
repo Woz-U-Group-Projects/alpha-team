@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
 </head>
 <style>
     .slider-handle {
@@ -71,16 +72,23 @@
     .autodj-controls .btn:focus {
         outline: 0;
     }
+    
+    #Login {
+        position: relative;
+        left: 90%;
+    }
 </style>
 <form>
-    <div class="home button">
+    <div class="Login">
         <Button id="Login" onClick="parent.open('https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=gxnsm64vnuninzu8f9whol09b82pqx&redirect_uri=http://localhost/api/login&scope=user_read&force_verify=true')">Login</Button>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </div>
 </form>
 
 </div>
 <div class="row ibox-content no-margins">
-    <div class="col-md-12 ng-hide" ng-hide="queue.current" style="">Nothing playing</div>
+    <div class="col-md-12 ng-hide" ng-hide="queue.current">Nothing playing</div>
     <div style="float: left;margin-right: 25px;">
         <youtube-player players="players" queue="queue" settings="settings" stats="stats" class="ng-isolate-scope" style="display: none;">
             <script src="https://www.youtube.com/iframe_api"></script><iframe id="yt_player" frameborder="0" allowfullscreen="1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" title="YouTube video player" width="400" height="225" src="https://www.youtube.com/embed/?controls=2&amp;disablekb=1&amp;showinfo=0&amp;cc_load_policy=0&amp;iv_load_policy=3&amp;fs=0&amp;origin=https%3A%2F%2Fbeta.nightbot.tv&amp;rel=0&amp;enablejsapi=1&amp;widgetid=1"></iframe></youtube-player>
@@ -88,26 +96,21 @@
             <script src="https://w.soundcloud.com/player/api.js"></script><iframe id="sc_player" width="225" height="225" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/monstercat/varien-sacred-woods&amp;auto_play=true&amp;buying=false&amp;liking=false&amp;download=false&amp;sharing=false&amp;show_artwork=true&amp;show_comments=false&amp;show_playcount=false&amp;show_user=false&amp;visual=true&amp;start_track=0"></iframe></soundcloud-player>
     </div>
     <div class="current-track" ng-show="queue.current" style="float: left; margin-top: 25px;">
-        <h4><strong class="ng-binding">Varien - Sacred Woods (feat. Skyelle)<!-- ngIf: queue.current.track.artist --><span ng-if="queue.current.track.artist" class="ng-binding ng-scope" style="">&nbsp;—&nbsp;Monstercat</span><!-- end ngIf: queue.current.track.artist --></strong></h4>
+        <h4><strong class="ng-binding">Varien - Sacred Woods (feat. Skyelle)<!-- ngIf: queue.current.track.artist --><span ng-if="queue.current.track.artist" class="ng-binding ng-scope" >&nbsp;—&nbsp;Monstercat</span><!-- end ngIf: queue.current.track.artist --></strong></h4>
         <p class="ng-binding"><i class="fa fa-clock-o"></i> 04:41</p>
         <p><i class="fa fa-link"></i> <a ng-href="https://soundcloud.com/monstercat/varien-sacred-woods" target="_blank" class="ng-binding" href="https://soundcloud.com/monstercat/varien-sacred-woods">https://soundcloud.com/monstercat/varien-sacred-woods</a></p>
         <p class="ng-binding"><i class="fa fa-user"></i> stefanmitrano</p>
         <p><button class="btn btn-primary btn-xs ng-hide" type="button" ng-click="saveToPlaylist(queue.current.track.url)" ng-show="queue.current.user.displayName &amp;&amp; settings.playlist === 'channel'"><i class="fa fa-bookmark"></i> Save to Channel Playlist</button></p>
-        <p>
-            <a href="https://monstercat.com" target="_blank"><img src="assets/images/powered_by_monstercat.png" ng-show="(settings.playlist === 'monstercat' &amp;&amp; settings.limits.playlistOnly === true) || (settings.playlist === 'monstercat' &amp;&amp; !queue.current.user)" width="88" height="25"
-                    class="ng-hide" style=""></a>
-            <a href="http://music.twitch.tv" target="_blank"><img src="assets/images/powered_by_twitch_music_library.png" ng-show="(settings.playlist === 'twitch_music_library' &amp;&amp; settings.limits.playlistOnly === true) || (settings.playlist === 'twitch_music_library' &amp;&amp; !queue.current.user)"
-                    height="25" width="46" class="ng-hide"></a>
-            <a href="https://soundcloud.com" target="_blank"><img src="assets/images/powered_by_soundcloud.png" ng-show="queue.current.track.provider === 'soundcloud'" width="52" height="16" class="" style=""></a>
-            <a href="https://youtube.com" target="_blank"><img src="assets/images/powered_by_youtube.png" ng-show="queue.current.track.provider === 'youtube'" width="52" height="25" class="ng-hide"></a>
-        </p>
+
     </div>
 </div>
+
+
 <div class="row ng-scope" style="padding-bottom: 25px;">
     <div class="col-md-12">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <h5>Queue</h5>
+                <h5>Music Queue</h5>
             </div>
             <div class="ibox-content">
                 <table class="table table-striped">
