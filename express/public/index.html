@@ -72,10 +72,11 @@
         outline: 0;
     }
 </style>
-<div class="home button">
-    <Button id="Login">Login</Button>
-</div>
-
+<form>
+    <div class="home button">
+        <Button id="Login" onClick="parent.open('https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=gxnsm64vnuninzu8f9whol09b82pqx&redirect_uri=http://localhost/api/login&scope=user_read&force_verify=true')">Login</Button>
+    </div>
+</form>
 
 </div>
 <div class="row ibox-content no-margins">
