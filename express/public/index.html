@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="login.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+</head>
+<style>
+    #Login {
+        position: relative;
+        left: 95%;
+    }
+    
+    #Clear {
+        position: relative;
+        left: 65%;
+    }
+    
+    #Skip {
+        position: relative;
+        left: 35%;
+    }
+    
+    table.tablesorter {
+        font-size: 12px;
+        background-color: #4D4D4D;
+        width: auto;
+        border: 1px solid #000;
+    }
+    
+    table.tablesorter th {
+        text-align: left;
+        padding: 5px;
+        background-color: #6E6E6E;
+    }
+    
+    table.tablesorter td {
+        color: #FFF;
+        padding: 5px;
+    }
+    
+    table.tablesorter .even {
+        background-color: #3D3D3D;
+    }
+    
+    table.tablesorter .odd {
+        background-color: #6E6E6E;
+    }
+    
+    table.tablesorter .header {
+        background-image: url(bg.png);
+        background-repeat: no-repeat;
+        border-left: 1px solid #FFF;
+        border-right: 1px solid #000;
+        border-top: 1px solid #FFF;
+        padding-left: 30px;
+        padding-top: 8px;
+        height: auto;
+        width: auto;
+    }
+    
+    table.tablesorter .headerSortUp {
+        background-image: url("http://www.eeferp.usp.br/sites/all/themes/adminimal_theme/css/images/arrow-asc.png");
+        background-repeat: no-repeat;
+    }
+    
+    table.tablesorter .headerSortDown {
+        background-image: url(desc.png);
+        background-repeat: no-repeat;
+    }
+</style>
+<form>
+    <div class="Login">
+        <Button id="Login" onClick="parent.open('https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=gxnsm64vnuninzu8f9whol09b82pqx&redirect_uri=http://localhost/api/login&scope=user_read&force_verify=true')">Login</Button>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <Button id="Clear">Clear Queue</Button>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <Button id="Skip">Skip Song</Button>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </div>
+    <div>
+
+
+    </div>
+</form>
+
+</div>
+
+<body>
+    <h1>Music Playlist</h1>
+    <audio controls>
+
+        
+    </audio>
+
+    <table id="entries" class="tablesorter" cellpadding="5" cellspacing="10">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Image</th>
+                <th>No. of likes</th>
+                <th>No. of dislikes</th>
+                <th>View count</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+
+
+
+</body>
+
+</html>
