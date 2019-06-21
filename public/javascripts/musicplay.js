@@ -1,143 +1,82 @@
-var tracks = []
-var audio;
-var audioPreload;
-var preloaded = false;
+etEntries();
 
-function playTrack(e) {
-    e.preventDefault();
-    var track = e.target.href;
-    audio.src = track;
-    $('#playlist li').removeClass('playing');
-    $(e.target).parent().addClass('playing');
-    $(audio).on('canplay', function() {
-        play();
-    })
-    preloaded = false;
-}
+function getEntries() {
 
-function queueAudio() {
-    audioPreload = document.createElement('audio');
-    audioPreload.controls = true;
-    var track = tracks.indexOf(audio.src) + 1;
-    if (tracks.length >= track) {
-        audioPreload.src = tracks[track];
-    }
-    audioPreload.id = 'playbar';
-}
+    $.ajax({
+        //url: "https://gdata.youtube.com/feeds/api/playlists/PL48A83AD3506C9D36?v=2&alt=json",
+        url: "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PL48A83AD3506C9D36&key=AIzaSyAyvig5VkfPt_lBR4sFl-ajsULtgUHmTwA",
+        dataType: "jsonp",
 
-function newSong() {
-    if (preloaded) {
-        var parentEl = audio.parentNode;
-        var newTrack = tracks.indexOf(audioPreload.src);
-        $('#playlist li').removeClass('playing');
-        $($('#playlist').children()[newTrack]).addClass('playing');
-        parentEl.replaceChild(audioPreload, audio);
-        audio = audioPreload;
-        play();
-        audio.addEventListener('timeupdate', audioUpdate, false);
-        audio.addEventListener('ended', newSong, false);
-        preloaded = false;
-    } else {
-        var track = tracks.indexOf(audio.src) + 1;
-        $('#playlist li').removeClass('playing');
-        $($('#playlist').children()[track]).addClass('playing');
-        audio.src = tracks[track];
-    }
-}
+        success: function(data) {
+            var video_id = "";
+            $.each(data.items, function(i, item) {
+                video_id = video_id + item.snippet.resourceId.videoId + ',';
+            });
+            video_id = video_id.substring(0, video_id.length - 1);
+            console.log(video_id);
+            $.ajax({
+                url: "https://www.googleapis.com/youtube/v3/videos?part=contentDetails%2Cstatistics%2Csnippet%2Cplayer&id=" + video_id + "&key=AIzaSyAyvig5VkfPt_lBR4sFl-ajsULtgUHmTwA",
+                dataType: "jsonp",
 
-function audioUpdate() {
-    var duration = parseInt(audio.duration),
-        currentTime = parseInt(audio.currentTime),
-        timeLeft = duration - currentTime;
-    progress = (audio.currentTime + 1) / duration;
-    if (timeLeft <= 10 && !preloaded) {
-        preloaded = true;
-        queueAudio();
-    }
-    TweenMax.set($('.fill'), {
-        scaleX: progress
-    })
-}
+                success: function(data) {
+                    $.each(data.items, function(i, item) {
+                        var title = item.snippet.title;
+                        var thumb = item.snippet.thumbnails.default.url;
+                        var numLikes = item.statistics.likeCount;
+                        var numDislikes = item.statistics.dislikeCount;
+                        var viewCount = item.statistics.viewCount;
 
-// ------- ON LOAD ---------
-$(function() {
-    FastClick.attach(document.body);
-    audio = document.getElementById('playbar');
-    audio.addEventListener('timeupdate', audioUpdate, false);
-    audio.addEventListener('ended', newSong, false);
-    var trackElements = document.getElementsByClassName('track');
-    var i;
-    for (i = 0; i < trackElements.length; i++) {
-        trackElements[i].addEventListener('click', function(e) {
-            playTrack(e);
-        }, false);
-        tracks.push(trackElements[i].href);
-    }
+                        $('#entries tbody').append("<tr><td id='editinplace'>" + title + "</td> <td><img alt='" + title + "' src='" + thumb + "'></img></td><td>" + numLikes + "</td><td>" + numDislikes + "</td><td>" + viewCount + "</td>" + "<td style='display: none' id='delete'><input type='button' class='del' value='Delete'/></td>" + "</tr>");
+                    });
+                    $("table").trigger("update");
+                    setEditInPlace();
+                }
+            });
 
-    audio.src = tracks[0];
-    $(audio).on('canplay', function() {
-        play();
-        //$($('#playlist').children()[0]).addClass('playing');
-    });
-});
-var pause = function() {
-    audio.pause();
-    $('#playpause').addClass('fa-play').removeClass('fa-pause');
-}
-var play = function() {
-    audio.play();
-    $('#playpause').removeClass('fa-play').addClass('fa-pause').removeClass('loading');
-    var index = tracks.indexOf(audio.src);
-    $('#title').text($($('#playlist a')[index]).text());
-}
-$('#playpause').click(function() {
-    if (audio.src) {
-        if (audio.paused) {
-            play();
-        } else {
-            pause();
+            $("table").trigger("update");
+            setEditInPlace();
         }
-    } else {
-        audio.src = tracks[0];
-        $(audio).on('canplay', function() {
-            play();
-        });
-    }
-})
-$('#next').click(function() {
-    var track = tracks.indexOf(audio.src);
-    if (track == -1) {
-        // WAT
-    } else if (track >= tracks.length) {
-        audio.src = '';
-    } else {
-        pause();
-        $('#playpause').addClass('loading');
-        audio.src = tracks[track + 1];
-        $('#playlist li').removeClass('playing');
-        $($('#playlist').children()[track + 1]).addClass('playing');
-        $(audio).on('canplay', function() {
-            play();
-        });
-    }
-})
-$('#back').click(function() {
-    var track = tracks.indexOf(audio.src);
-    if (track == -1) {
-        // WAT
-    } else if (track <= 0 || audio.currentTime > 2) {
-        audio.currentTime = 0;
-    } else {
-        pause();
-        $('#playpause').addClass('loading');
-        audio.src = tracks[track - 1];
-        $('#playlist li').removeClass('playing');
-        $($('#playlist').children()[track - 1]).addClass('playing');
-        $(audio).on('canplay', function() {
-            play();
-        });
-    }
-})
-$('.menu').click(function() {
-    $('#player').toggleClass('show');
+    });
+
+}
+
+setEditInPlace();
+
+function setEditInPlace() {
+    $("td").each(function() {
+        var id = $(this).attr("id");
+        if (id == 'editinplace') {
+            $(this).editInPlace({
+                callback: function(unused, enteredText) {
+                    return enteredText;
+                },
+                show_buttons: true
+            });
+        }
+    });
+}
+$(document).ready(function() {
+
+    $("#entries").tablesorter();
+
+    $("#edit").click(function() {
+        var text = $("#edit").val();
+        if (text == 'edit') {
+            $("#edit").val('Close it');
+            $("td").each(function() {
+                var id = $(this).attr("id");
+                if (id == 'delete') $(this).show('slow');
+            });
+        } else {
+            $("#edit").val('edit');
+            $("td").each(function() {
+                var id = $(this).attr("id");
+                if (id == 'delete') $(this).hide('slow');
+            });
+        }
+    });
+    $('.del').live('click', function() {
+        $(this).parent().parent().remove();
+        $("#entries").trigger("update");
+    });
 });
