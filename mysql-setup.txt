@@ -1,4 +1,7 @@
 CREATE DATABASE songrequest;
+CREATE DATABASE sessions;
 CREATE USER 'alpha'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 GRANT all on songrequest.* to 'alpha'@'localhost';
+CREATE USER 'alpha_sessions'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT all on sessions.* to 'alpha_sessions'@'localhost';
 FLUSH PRIVILEGES;
