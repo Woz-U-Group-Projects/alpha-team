@@ -1,143 +1,147 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<head>
-    <title>Express</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
-   
-    <script type="text/javascript" src="/javascripts/script.js"></script>
-</head>
-<style>
+    <title>AlphaQ</title>
 
-</style>
+    <meta name="description" content="A music player Queue with twitch integration">
+    <meta name="author" content="Stefan, Justin, Joshua, Steven">
 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/style.css" rel="stylesheet">
 
-<body>
-    <header class="header-bar">
- 
-        <h1>AlphaQ</h1>
-          <button class="login">Login</button>
-      
-      </header>
-      <!-- Music player-->
-       <div class="videoWrapper">
-                  <div id="ytplayer"></div>
-                  
-              </div>
-      <!-- Music player-->
-      <article>
-        
-         
-         
-          <table class="vitamins">
-            
-              <thead>
-                 <h2>Music Play list</h2>
-                <button class="clear-playlist">Clear Playlist</button>
-                  <tr>
-                      <th>ID</th>
-                      <th>Song</th>
-                      <th>Channel</th>
-                      <th>Song Length</th>
-                    <th>Song Length</th>
-                     
-      
-                  </tr>
-              </thead>
-              <tfoot>
-                  <tr>
-                      <td colspan="4">
-                          <p><strong>mcg</strong> stands for micrograms. <strong>IU</strong> stands for International Units</p>
-                     
-                      </td>
-                  </tr>
-              </tfoot>
-              <tbody>
-                  <tr>
-                      <td>1</td>
-                      <td>fat-soluble</td>
-                      <td>Dark-colored fruit</td>
-                      <td>3,000 IU/day</td>
-                  </tr>
-                  <tr>
-                      <td>2</td>
-                      <td>water-soluble</td>
-                      <td>Lean meats</td>
-                      <td>1 mcg/day</td>
-                  </tr>
-                  <tr>
-                      <td>3</td>
-                      <td>water-soluble</td>
-                      <td>Lean meats</td>
-                      <td>2.2 mcg/day</td>
-                  </tr>
-                  <tr>
-                      <td>4</td>
-                      <td>water-soluble</td>
-                      <td>Nuts</td>
-                      <td>1.7 mg/day</td>
-                  </tr>
-                  <tr>
-                      <td>5</td>
-                      <td>water-soluble</td>
-                      <td>Meat</td>
-                      <td>2.4 mcg/day</td>
-                  </tr>
-                  <tr>
-                      <td>6</td>
-                      <td>water-soluble</td>
-                      <td>Broccoli</td>
-                      <td>90 mg/day</td>
-                  </tr>
-                  <tr>
-                      <td>7</td>
-                      <td>fat-soluble</td>
-                      <td>Fish</td>
-                      <td>600 IU/day</td>
-                  </tr>
-                  <tr>
-                      <td>8</td>
-                      <td>fat-soluble</td>
-                      <td>Avocado</td>
-                      <td>33 IU/day</td>
-                  </tr>
-                  <tr>
-                      <td>9</td>
-                      <td>fat-soluble</td>
-                      <td>Cabbage</td>
-                      <td>120 mcg/day</td>
-                    <tr>
-                      <td>10</td>
-                      <td>fat-soluble</td>
-                      <td>Cabbage</td>
-                      <td>120 mcg/day</td>
-                  </tr>
-                  </tr>
-              </tbody>
-          </table>
-      </article>
-  <!--
-    <h1>My music</h1>
+  </head>
+  <body>
 
-    <table id="entries" class="tablesorter" border="0" cellpadding="5" cellspacing="10">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Image</th>
-                <th>No. of likes</th>
-                <th>No. of dislikes</th>
-                <th>View count</th>
+    <div class="container-fluid">
+	<div class="row">
+		<div class="col-md-4">
+			<h3>
+				AlphaQ
+			</h3>
+		</div>
+		<div class="col-md-6">
+		</div>
+		<div class="col-md-2" style="float:right;">
+			 
+			<button type="button" class="btn btn-success">
+				Login
+			</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-2" style="float:left;">
+			<h3>
+				Music Player
+			</h3>
+		</div>
+		<div class="col-md-10">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+		</div>
+		<div class="col-md-8">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+		</div>
+		<div class="col-md-4">
+		</div>
+		<div class="col-md-2" style="float:right">
+			 
+			<button type="button" class="btn btn-success">
+				Delete Song
+			</button>
+		</div>
+		<div class="col-md-2">
+			 
+			<button type="button" class="btn btn-success">
+				Skip Song
+			</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-1">
+		</div>
+		<div class="col-md-3">
+			<h3>
+				Music Playlist
+			</h3>
+		</div>
+		<div class="col-md-8">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8">
+		</div>
+		<div class="col-md-2" style='float:right;'>
+			 
+			<button type="button" class="btn btn-success">
+				Clear Playlist
+			</button>
+		</div>
+		<div class="col-md-2">
+		</div>
+	</div>
+	<div class="row-table" style='
+	border: 1px solid black;
+	background-color: lightblue;
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 30px;
+	padding-left: 10px;width:50%;'>
+		<div class="col-md-1" style='float:left; width:10%'>
+			 <span class="badge badge-default">ID</span>
+		</div>
+		<div class="col-md-4" style='float:left; width:20%'>
+			 <span class="badge badge-default">Title</span>
+		</div>
+		<div class="col-md-3" style='float:left; width:20%'>
+			 <span class="badge badge-default">Artist</span>
+		</div>
+		<div class="col-md-1" style='float:left; width:20%'>
+			 <span class="badge badge-default">Likes</span>
+		</div>
+		<div class="col-md-1" style='float:left; width:20%'>
+			 <span class="badge badge-default">Length</span>
+		</div>
+		
+	</div>
+	<!--Steps 1: add new row with javascript
+	Steps 2: populate new row with data if someone adds data to Queue-->
+	<div class="row-table" style='
+	border: 1px solid black;
+	background-color: lightblue;
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 30px;
+	padding-left: 10px;width:50%;'>
+		<div class="col-md-1" style='float:left; width:10%'>
+			 <span class="badge badge-default">1</span>
+		</div>
+		<div class="col-md-4" style='float:left; width:20%'>
+			 <span class="badge badge-default">What is Love?</span>
+		</div>
+		<div class="col-md-3" style='float:left; width:20%'>
+			 <span class="badge badge-default">Haddaway</span>
+		</div>
+		<div class="col-md-1" style='float:left; width:20%'>
+			 <span class="badge badge-default">306,385</span>
+		</div>
+		<div class="col-md-1" style='float:left; width:20%'>
+			 <span class="badge badge-default">2:46</span>
+		</div>
+		
+	</div>
+</div>
 
-            </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
-    -->
-
-
-
-</body>
-
-
+    <script src="javascripts/"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script src="javascripts/scripts.js"></script>
+  </body>
 </html>
