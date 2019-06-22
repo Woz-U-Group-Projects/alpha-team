@@ -21,8 +21,7 @@ exports.start=function(req,res){
     if(getQuery(req,"test","Hi")){
         console.log("Hi back");
     }
-    else
-    console.log('the query test:'+query);
+
 
 res.writeHead(200);
 res.write("test");
