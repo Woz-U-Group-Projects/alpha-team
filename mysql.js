@@ -1,48 +1,98 @@
+//to create user use this format
+//CREATE USER 'alpha'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 //when reseting passwords use this format
 //ALTER USER 'alpha'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 var mysql = require('mysql');
-var con = mysql.createConnection({
+var con = mysql.createPool({
   host: "localhost",
   user: "alpha",
   password: "password",
   database: "songrequest"
 });
-function ping()
-{
-  con.ping(function(error){
-    if(error){
-      console.log(error);
-      console.log(error.code);
-  con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected to database!");
-});
-    }
-});
-}
 exports.test=function(){
   con.query("select * from test", function (err,result,fields){
     console.log(result);
   });
 }
 exports.createOAuthTable=function(){
-  ping();
- 
+  if(exports.tableExists("oAuth",function(_exists){
+    if(!_exists){
     con.query("create table oAuth(auth varchar(80),nick varchar(25))", function (err,result,fields){
       console.log(result);
     });
-  
+  }
+}));
 }
 exports.createSongRequestTable=function(channel){
-  ping();
-
-    con.query("create table "+channel+"_songList(id int AUTO_INCREMENT, queue int unique, requestedBy VARCHAR(25) NOT NULL, songURL VARCHAR(80) UNIQUE NOT NULL)", function (err,result,fields){
-      console.log(result);
+  if(exports.tableExists(channel+"_songList",function(_exists){
+    if(!_exists){
+    var query=con.query("create table "+mysql.escapeId(channel+"_songList")+" (id int key AUTO_INCREMENT, queue int unique, requestedBy VARCHAR(25) NOT NULL, title varchar(70) NOT NULL, songURL VARCHAR(80) UNIQUE NOT NULL)", function (err,result,fields){
+      console.log(query.sql);
+    
     });
+  }
+  }));
+}
+exports.getSongs=function(table,callback){
+  con.query("select queue,title,songURL,requestedBy from "+mysql.escapeId(table+"_songList"),function(err,result){
+    if(err)throw err;
+    if(typeof(callback)=="function")
+    callback(result);
+  });
+}
+exports.getQueue=function(table,callback){
+  con.query("select count(*) as count from "+mysql.escapeId(table+"_songList"),function(err,result){
+    if(err)throw err;
+    if(typeof(callback=="function"))
+    callback(result[0].count+1);
+  });
+}
+exports.getRequesterFromQueue=function(table,queue,callback){
+  con.query("select requestedBy from "+mysql.escapeId(table+"_songList")+" where queue=?",queue,function(err,result){
+    if(err)throw err;
+    if(typeof(callback=="function")){
+      if(typeof(result[0])!="undefined")
+      callback(result[0].requestedBy);
+      else
+      callback();
+    }
+    if(typeof(result[0])!="undefined")
+    console.log("mysql.js getRequesterFromQueue() requested by: "+result[0].requestedBy);
+    else
+    console.log()
+  });
+}
+exports.deletefromQueue=function(table,deleteInitiatedBy,deleteQueue,callback){
+  exports.getRequesterFromQueue(table,deleteQueue,function(requestedBy){
+    if(requestedBy==deleteInitiatedBy||table==deleteInitiatedBy){
+      con.query("delete from "+mysql.escapeId(table+"_songList")+" where queue=?",deleteQueue,function(err,result){
+        if(err) throw err;
+        con.query("update "+mysql.escapeId(table+"_songList")+" set queue=queue-1 where queue>? order by queue asc",deleteQueue,function(error){
+          if(error)throw error;
+        
+        if(typeof(callback=="function"))
+        callback(result.affectedRows==1);
+      });
+    });
+    }
+    else
+    {
+      if(typeof(callback=="function"))
+      callback(undefined);
+    }
+  })
+}
+exports.popFromQueue=function(table){
+con.query("delete from "+mysql.escapeId(table+"_songList")+" where queue=1",function(err){
+  if(err)throw err;
+  con.query("update "+mysql.escapeId(table+"_songList")+" set queue=queue-1 order by queue asc",function(error){
+    if(error)throw error;
+  });
+});
+
 }
 exports.tableExists=function(table,callback){
-  ping();
-      con.query("select count(*) as found from information_schema.tables where table_schema='songrequest' and table_name='"+table+"'", function (err,result,fields){
+      con.query("select count(*) as found from information_schema.tables where table_schema='songrequest' and table_name=?",[table], function (err,result,fields){
         console.log(result[0].found==1);
         if(typeof(callback)=="function")
         {
@@ -52,10 +102,9 @@ exports.tableExists=function(table,callback){
 
 }
 exports.getOauth=function(user,callback){
-  ping();
    exports.tableExists("oauth",function(_exists){
      if(_exists && user!=undefined){
-    con.query("select auth from oauth where nick='"+user+"'", function (err,result,fields){
+    con.query("select auth from oauth where nick=?",[user], function (err,result,fields){
       console.log(result);
       if(typeof(callback)=="function"){
         result[0]!=undefined?callback(result[0].auth):callback();
@@ -71,19 +120,17 @@ exports.getOauth=function(user,callback){
 }
   exports.updateTable=function(table,updateCol,newVal,columns,value)
   {
-    ping();
      if(typeof(columns)=="string" && typeof(value)=="string"){    
      //console.log("mysql statement:");
       //console.log("update "+table +" set "+updateCol+"='"+newVal+"' where "+columns+"='"+value+"'");
-      con.query("update "+table +" set "+updateCol+"='"+newVal+"' where "+columns+"='"+value+"'", function (err,result,fields){
+      con.query("update ?? set ??=? where ??=?",[table,updateCol,newVal,columns,value], function (err,result,fields){
         if(err) throw err;
         console.log(result);
       });
       
     }
   }
-  exports.insertIntoTable=function(table,columns,value){
-    ping();
+  exports.insertIntoTable=function(table,columns,value,callback){
      var temp="";
      if((typeof(columns)=="string" && typeof(value)=="string" && columns.split(",").length==value.split(",").length)   ||   (typeof(value)=="object" && typeof(value[0][0])=="string" && columns.split(",").length==value[0].length)){
      if(typeof(value)=="string" && typeof(columns)=="string" ){
@@ -106,12 +153,19 @@ exports.getOauth=function(user,callback){
         temp+=columns[i];
       }
     }
-    columns=temp;
+    columns=[];
+    columns[0]=temp.split(",");
     temp="";
       console.log("columns: "+columns);
       console.log("value: "+value);
       
-      con.query("insert into "+table +"("+columns+") values ?", [value], function (err,result,fields){
+      con.query("insert into ??(??) values ?", [table,columns,value], function (err,result,fields){
+        if(typeof(callback)=="function"){
+          if(result!=undefined)
+          callback(result.affectedRows==1)
+          else
+          callback(undefined);
+        }
         console.log(result);
       });
       

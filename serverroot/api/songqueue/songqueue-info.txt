@@ -1,0 +1,46 @@
+This file is to document the api calls for localhost/api/songqueue with examples.
+While setting up a user for the first time you would likely want to allow a user to have their own song request database table, so users can request songs on their channel.
+This can be accomplished by requesting the following resource just replace the brackets with the users name.
+GET http://localhost/api/songqueue?request=addTable&user={USERS USERNAME GOES HERE, WITHOUT SPACES OR CURLY BRACKETS}
+
+Now  some user can request songs to be played on any channel that has been setup.
+POST http://localhost/api/songqueue?request=insertSong&channel=somechannel
+header: "content-type":"application/json"
+body {"requestedBy":"Justin","title","I wanna rock!","url":"https://www.youtube.com/watch?v=SRwrg0db_zY"}
+Note: For the body the semi brackets are required, along with the quotation marks,
+as for the header the "content-type":"application/json" is a key/value pair.
+
+After your front end has finished playing a song, you will want to remove that song. My name will be used as the example channel.
+POST http://localhost/api/songqueue?request=popfromqueue?channel=Justin
+
+In order for the front end to get the list of songs, which will be in json format. My name will be used as the example channel.
+GET http://localhost/api/songqueue?request=getSongs&channel=Justin
+
+This last function will allow either the requester of the song, or the channel owner to remove a song.
+This requires a post method in addition to sending json to the body again.
+POST http://localhost/api/songque?request=deleteSong&channel=Justin
+header: "content-type":"application/json"
+body: {"requestedBy":"kevin","queue":"1"}
+The "requestedBy" is the user who requested the song be deleted, and "queue" is the unique identifier of the song that is to be deleted.
+
+I found this document about making post requests in react:
+
+
+fetch('https://mywebsite.com/endpoint/', {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    firstParam: 'yourValue',
+    secondParam: 'yourOtherValue',
+  })
+})
+
+or otherwise you can try:
+
+var request = new XMLHttpRequest();
+request.open('POST', '/my/url', true);
+request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+request.send(data);

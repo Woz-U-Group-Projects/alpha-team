@@ -1,19 +1,19 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-/*
-//waiting for mysql.js
 var MySQLStore = require('express-mysql-session')(session);
+
+
  
 var options = {
     host: 'localhost',
     port: 3306,
-    user: 'session_test',
+    user: 'alpha_sessions',
     password: 'password',
-    database: 'session_test'
+    database: 'sessions'
 };
  
-var sessionStore = new MySQLStore(options);*/
+var sessionStore = new MySQLStore(options);
 exports.addCookie=function(req,name,value){ //adds a cookie if it does not exist
 if(req.session[name]==undefined){//if it doesn't exist req.session["newCookie"] will equal undefined.
 req.session[name]=value; //so we will set the value
@@ -26,11 +26,8 @@ exports.getCookie=function(req,name){//this will return the value of the cookie
 }
 exports.isCookie=function(req,name){//has this cookie been set already, or does the cookie not exist.
   console.log(+"isSet? "+name+":"+req.session[name]!=undefined);
-  if(req.session[name]!=undefined)
-  {
-    return true;
-  }
-  return false;
+  return req.session[name]!=undefined;
+  
 }
 exports.updateCookie=function(req,name,value){//updates the value of a cookie if it already exists
   if(req.session[name]!=undefined){//if the cookie has not yet been set before we would be adding a cookie.
@@ -39,7 +36,7 @@ exports.updateCookie=function(req,name,value){//updates the value of a cookie if
   }
   return false;
 }
-exports.removeCookie=function(req,name,value){//deletes cookie
+exports.removeCookie=function(req,name){//deletes cookie
   if(req.session[name]!=undefined){
     req.session[name]=undefined;
     return true;
@@ -74,6 +71,7 @@ app.use(session({
     secret: "cookie_secret",
     name: "session",
     proxy: true,
+    store:sessionStore,
     resave: true,
     saveUninitialized: true
 }));

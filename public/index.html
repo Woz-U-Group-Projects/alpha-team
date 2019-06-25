@@ -11,11 +11,15 @@
     <meta name="author" content="Stefan, Justin, Joshua, Steven">
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="stylesheets/style.css" rel="stylesheet">
+	<link href="stylesheets/style.css" rel="stylesheet">
+	<script src"javascripts/script.js"> </script> 
 
   </head>
   <body>
 
+	<p id="ID"></p>
+
+	
     <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-4">
@@ -27,9 +31,8 @@
 		</div>
 		<div class="col-md-2" style="float:right;">
 			 
-			<button type="button" class="btn btn-success">
-				Login
-			</button>
+			<a href="google.com" class="button purple"><span>✓</span>Login With Twitch.tv</a>
+</div>
 		</div>
 	</div>
 	<div class="row">
@@ -54,15 +57,11 @@
 		</div>
 		<div class="col-md-2" style="float:right">
 			 
-			<button type="button" class="btn btn-success">
-				Delete Song
-			</button>
+			
 		</div>
-		<div class="col-md-2">
-			 
-			<button type="button" class="btn btn-success">
-				Skip Song
-			</button>
+		<div class="col-md-2" style="float:center">
+			<a class="btn pill" href="#">Delete Song</a>
+			<a class="btn pill" href="#">Skip Song</a>
 		</div>
 	</div>
 	<div class="row">
@@ -79,12 +78,9 @@
 	<div class="row">
 		<div class="col-md-8">
 		</div>
-		<div class="col-md-2" style='float:right;'>
+		<div class="col-md-2" style='float:center;'>
 			 
-			<button type="button" class="btn btn-success">
-				Clear Playlist
-			</button>
-		</div>
+			<a class="btn pill" href="#">Clear Play list</a>
 		<div class="col-md-2">
 		</div>
 	</div>
@@ -122,7 +118,7 @@
 	padding-bottom: 30px;
 	padding-left: 10px;width:50%;'>
 		<div class="col-md-1" style='float:left; width:10%'>
-			 <span class="badge badge-default">1</span>
+			<p id="ID"></p>
 		</div>
 		<div class="col-md-4" style='float:left; width:20%'>
 			 <span class="badge badge-default">What is Love?</span>
@@ -140,6 +136,7 @@
 	</div>
 </div>
 
+ <p id="ID">  </p>
     <script src="javascripts/"></script>
     <script src="javascripts/bootstrap.min.js"></script>
     <script src="javascripts/scripts.js"></script>
