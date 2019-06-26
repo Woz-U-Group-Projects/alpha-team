@@ -26,7 +26,7 @@ exports.createOAuthTable=function(){
 exports.createSongRequestTable=function(channel){
   if(exports.tableExists(channel+"_songList",function(_exists){
     if(!_exists){
-    var query=con.query("create table "+mysql.escapeId(channel+"_songList")+" (id int key AUTO_INCREMENT, queue int unique, requestedBy VARCHAR(25) NOT NULL, title varchar(70) NOT NULL, songURL VARCHAR(80) UNIQUE NOT NULL)", function (err,result,fields){
+    var query=con.query("create table "+mysql.escapeId(channel+"_songList")+" (id int key AUTO_INCREMENT, queue int unique not null, requestedBy VARCHAR(25) NOT NULL, title varchar(100) NOT NULL, length int NOT NULL, views int NOT NULL, likeCount int not null, dislikeCount int not null, songURL VARCHAR(80) UNIQUE NOT NULL)", function (err,result,fields){
       console.log(query.sql);
     
     });
@@ -34,7 +34,7 @@ exports.createSongRequestTable=function(channel){
   }));
 }
 exports.getSongs=function(table,callback){
-  con.query("select queue,title,songURL,requestedBy from "+mysql.escapeId(table+"_songList"),function(err,result){
+  con.query("select queue,title,length,likeCount,dislikeCount,songURL,requestedBy from "+mysql.escapeId(table+"_songList"),function(err,result){
     if(err)throw err;
     if(typeof(callback)=="function")
     callback(result);
@@ -132,7 +132,7 @@ exports.getOauth=function(user,callback){
   }
   exports.insertIntoTable=function(table,columns,value,callback){
      var temp="";
-     if((typeof(columns)=="string" && typeof(value)=="string" && columns.split(",").length==value.split(",").length)   ||   (typeof(value)=="object" && typeof(value[0][0])=="string" && columns.split(",").length==value[0].length)){
+     if((typeof(columns)=="string" && typeof(value)=="string" && columns.split(",").length==value.split(",").length)   ||   (typeof(value)=="object" && (typeof(value[0][0])=="string" || typeof(value[0][0])=="number") && columns.split(",").length==value[0].length)){
      if(typeof(value)=="string" && typeof(columns)=="string" ){
     
      for(i=0;i<value.length;i++){
@@ -144,6 +144,9 @@ exports.getOauth=function(user,callback){
      temp=temp.split(",");
      value=[];
      value[0]=temp;
+  }
+  else{
+    console.error("Error: number of columns and values do not match.");
   }
 
      temp="";
@@ -160,6 +163,7 @@ exports.getOauth=function(user,callback){
       console.log("value: "+value);
       
       con.query("insert into ??(??) values ?", [table,columns,value], function (err,result,fields){
+        if(err) throw err;
         if(typeof(callback)=="function"){
           if(result!=undefined)
           callback(result.affectedRows==1)
@@ -169,6 +173,14 @@ exports.getOauth=function(user,callback){
         console.log(result);
       });
       
+    }
+    else
+    {
+      console.log("error check that your columns and values match.");
+      for(i=0;i<value[0].length;i++)
+      {
+        console.log(value[0][i]);
+      }
     }
   }
 

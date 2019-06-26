@@ -1,2 +1,8 @@
 
 \.env
+
+serverroot/api/songqueue/index-backup\.js
+
+node_modules/
+
+package-lock\.json
