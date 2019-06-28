@@ -21,8 +21,17 @@
        loop: 1,
        cc_load_policy: 1,	//this fails to work . . . 
        cc_lang_pref: 'en',
-       iv_load_policy: 3,			     
+       iv_load_policy: 3,
      }
      
    });			    
  }
+
+ 
+	/** var txt = '{"queue":"1", "title":"I wanna rock", "songURL":"https://www.youtube.com/watch?v=SRwrg0db_zY"}'
+	var obj = JSON.parse(txt);
+	document.getElementById("ID").innerHTML = obj.queue;
+	document.getElementById("TITLE").innerHTML = obj.title;
+	document.getElementById("URL").innerHTML = obj.songURL;
+*/
+
