@@ -52,6 +52,7 @@ exports.start=function(req,res){
         }
         else
         if(request=="isloggedin"){
+            console.log("cookie: "+req.header("cookie"));
             if(cookie.isCookie(req,"oauth") && cookie.isCookie(req,"nick")){
                 username=cookie.getCookie(req,"nick");
                 console.log("request isloggedin stored in cookie user:"+username)
@@ -85,6 +86,7 @@ exports.start=function(req,res){
             {
                 res.writeHead(200, {'Content-Type': 'text/plain'});
                 res.write("false");
+                console.log("no cookie")
                 res.end();   
             }
             });
@@ -187,6 +189,10 @@ else
     }
 }
     else if(req.method=="POST"){
+        if(req.header("Content-Type")!="application/json"){
+            req.headers["Content-Type"]="application/json";
+            //req.method="POST";
+        }
         if(getQuery(req,"request","getloggedinuser")){
             if(cookie.isCookie(req,"nick")&&cookie.isCookie(req,"oauth")){
             twitch.validateOAuth(cookie.getCookie(req,"oauth"),function(_result,status){
@@ -217,17 +223,94 @@ else
 
         }
         else
+        if(getQuery(req,"request","isloggedin")){
+            console.log("Method: "+req.method);
+            console.log("request headers: "+JSON.stringify(req.headers));
+            console.log("request=isloggedin");
+            console.log("request body: "+JSON.stringify(req.body));
+            if(req.body["session"]){
+                _sessionID=req.body["session"].slice(4).split(".")[0];
+                cookie.getSession(_sessionID,function(err,session){                    
+                console.log(JSON.stringify(session));
+            if(session && session.oauth && session.nick){
+                username=session.nick;
+                console.log("request isloggedin stored in cookie user:"+username)
+                //twitch.validateOAuth
+                twitch.validateOAuth(session.oauth,function(result,status){
+                    json=JSON.parse(result);
+                if(status==200 && json["login"].toLowerCase()==username.toLowerCase()){
+                    var user=getQuery(req,"user");
+                if(!user || user.toLowerCase()==username.toLowerCase()){
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+             res.write("true");
+             console.log("true");
+             res.end();
+                }
+                else{
+                    res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.write("false");
+            console.log("false");
+             res.end();
+                }
+            }
+            else if(status==401){
+                console.log("staus 401")
+                console.log("result: "+result);
+                if(json.message!=undefined){
+                    console.log("result.message");
+                    if(json.message=="invalid access token"){
+                        res.writeHead(401, {'Content-Type': 'text/plain'});
+                        res.write("invalid access token");
+                        res.end();
+                        console.log("invalid access token");
+                        cookie.removeCookie(req,"nick");
+                        cookie.removeCookie(req,"oauth");
+                        //cookie.endSession();
+                    }
+                }
+
+            }
+            else 
+            {
+                res.writeHead(200, {'Content-Type': 'text/plain'});
+                res.write("false");
+                console.log("false");
+                res.end();   
+            }
+            });
+        }
+            else
+            {
+                res.writeHead(200, {'Content-Type': 'text/plain'});
+             res.write("false");
+             res.end();   
+            }
+        });
+        }
+        else{
+            res.writeHead(400,{"Content-Type":"text/plain"});
+            res.write("Request missing session");
+            console.log("request missing session");
+            res.end();
+        }
+    
+        }
+        else
         {
             res.writeHead(404,{"Content-Type":"text/plain"});
             res.write("page not found");
+            console.log("404 #1");
             res.end();
         }
         
         
     }
+
     else{
         res.writeHead(404,{"Content-Type":"text/plain"});
         res.write("page not found.");
+        console.log("404 #2");
+        console.log("method: "+req.method)
         res.end();
     }
 }  

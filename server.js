@@ -37,6 +37,17 @@ cookie.start(app);//initializes cookies functionality within express
       return res.end("404 Not Found");   //and write this to the body.
     }
     else{
+      //res.setHeader("Cache-Control","no-cache");
+      //res.setHeader();
+      res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+      res.setHeader("Access-Control-Allow-Methods", "DELETE, POST, GET");
+      res.set("Access-Control-Allow-Headers", "Content-Type");
+      res.set("Access-Control-Allow-Credentials","true");
+      if(req.method=="OPTIONS"){
+        res.writeHead(200);
+        res.end();
+        return;
+    }
     getdoc.start(req,res); //the exported start function exists, so we are redirecting to the backend file for the location requested.
     }
 

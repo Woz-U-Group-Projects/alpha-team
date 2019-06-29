@@ -1,5 +1,5 @@
 var express = require('express');
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 
@@ -14,6 +14,14 @@ var options = {
 };
  
 var sessionStore = new MySQLStore(options);
+exports.getSession=function(SID,callback){
+sessionStore.get(SID,function(err,session){
+  if(typeof(callback)=="function")
+  {
+    callback(err,session);
+  }
+})
+}
 exports.addCookie=function(req,name,value){ //adds a cookie if it does not exist
 if(req.session[name]==undefined){//if it doesn't exist req.session["newCookie"] will equal undefined.
 req.session[name]=value; //so we will set the value
@@ -66,14 +74,14 @@ exports.newSession=function(req){
 });
 }
 exports.start=function(app){//required code to use cookies takes the express object and tells express we are using session cookies
-app.use(cookieParser());
 app.use(session({
     secret: "cookie_secret",
     name: "session",
     proxy: true,
     store:sessionStore,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie:{httpOnly:false}
 }));
 }
 exports.save=function(req){//in the event we need this for long connections and it might be useful to save a cookie manually, cookies are save automatically at the end of a request.
