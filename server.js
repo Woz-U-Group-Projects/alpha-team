@@ -26,7 +26,7 @@ function getDefaultDoc(req, res, filename, callback, i = 0) { //allows for auto 
         }
         return null; //this is very important to return so we are not executing this function on an infinite loop.
     }
-    console.log("Checking url: " + filename + default_doc[i])
+    console.log("Checking url: " + filename + default_doc[i]);
     fs.readFile(filename + default_doc[i], function(err, data) {
         if (err) { //err will result to true if the file could not be found.
             // for example /wwwroot/index.htm doesn't exist so error would be called.
@@ -126,3 +126,17 @@ app.get("(/*)?", function(req, res) { //listens for requests to the website the 
         return res.sendFile(path.join(__dirname + filename)); //we are sending the file that was requested.
     });
 }).listen(80); //binds to port 80 and listens for incoming requests to the server.
+
+var request = new XMLHttpRequest();
+request.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        console.log(request.responseText);
+    } else if (this.readyState == 4) {
+        console.log("status: " + this.status);
+        console.log(this.responseText);
+    }
+};
+song = { "title": "some new video", "url": "https://www.youtube.com/watch?v=abcd123456e", "requestedBy": "ssssolidsnake6" };
+request.open("POST", "http://localhost/api/songqueue?request=insertsong&channel=bbfambot", true);
+request.setRequestHeader("Content-Type", "application/json");
+request.send(JSON.stringify(song));
