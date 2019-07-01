@@ -1,0 +1,27 @@
+This file is to document the api calls for localhost/api/login with examples.
+This first request is to obtain the web address for a user to authorize/login to our service with twitch.
+GET http://localhost/api/login?request=twitchauthlink
+
+
+If you want to simply link to an internal location and have the api automatically redirect to twitch you can add the redirect=1 to the end of the previous api call.
+GET http://localhost/api/login?request=twitchauthlink&redirect=1
+
+In order to check if a user is logged in, which the front end must do before every request. The result will simply be a true or a false.
+GET http://localhost/api/login?request=isloggedin
+
+You can also verify which user is logged in without the server responding with the users login name,
+we are just confirming is this user who we think it is.
+for example:
+username who is logged in: john-doe
+GET http://localhost/api/login?request=isloggedin&user=jane-doe
+result: false
+GET http://localhost/api/login?request=isloggedin&user=john-doe
+result: true
+
+We can also ask the server for the users logged in username however this will be done through the post method.
+POST http://localhost/api/login?request=getloggedinuser
+If a user is logged in this will return a status code of 200 meaning request OK, in addition to the users username.
+Otherwise this will return status code 403 which means Forbidden, and will state user is not logged in.
+
+
+
