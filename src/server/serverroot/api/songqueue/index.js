@@ -13,14 +13,14 @@ function insertSong(res,req,_songqueueData,_youtubeData){//youtubeData will have
     likeCount
     dislikeCount
     */
-        channel=_songqueueData.channel;
-        requestedBy=_songqueueData.requestedBy;
-        songURL="https://www.youtube.com/?v="+_youtubeData.id;
-        title=_youtubeData.title;
-        length=_youtubeData.length;
-        views=_youtubeData.views;
-        likeCount=_youtubeData.likeCount;
-        dislikeCount=_youtubeData.dislikeCount;
+       let channel=_songqueueData.channel;
+       let  requestedBy=_songqueueData.requestedBy;
+       let  songURL="https://www.youtube.com/?v="+_youtubeData.id;
+       let title=_youtubeData.title;
+       let length=_youtubeData.length;
+       let views=_youtubeData.views;
+       let  likeCount=_youtubeData.likeCount;
+       let  dislikeCount=_youtubeData.dislikeCount;
         console.log("Id"+_youtubeData.id)
         console.log(_songqueueData);
         console.log(_youtubeData);
@@ -38,7 +38,7 @@ function insertSong(res,req,_songqueueData,_youtubeData){//youtubeData will have
                        console.log("url "+songURL);
                         if(requestedBy && title && songURL)
                         {
-                            URL=url.parse(songURL);
+                           let URL=url.parse(songURL);
                             if(URL.host=="youtube.com" || URL.host=="www.youtube.com"){
                                 if(requestedBy==cookie.getCookie(req,"nick")){
                             console.log("attempting to insert data");
@@ -95,10 +95,10 @@ function insertSong(res,req,_songqueueData,_youtubeData){//youtubeData will have
 }
 function getQuery(req,query,equals){
     query=query.toLowerCase();
-    var urlQuery=url.parse(req.url,true).query;console.log(urlQuery);
-    var searchQuery=JSON.parse(JSON.stringify(urlQuery).toLowerCase());
+    let urlQuery=url.parse(req.url,true).query;console.log(urlQuery);
+    let searchQuery=JSON.parse(JSON.stringify(urlQuery).toLowerCase());
     if(searchQuery[query]){
-        var temp="";
+        let  temp="";
         for(let i=0;i<query.length;i++){
     temp+=JSON.stringify(urlQuery)[JSON.stringify(searchQuery).search(query)+i];
         }
@@ -154,9 +154,17 @@ res.end();
     else
     if(getQuery(req,"request","popfromqueue") && getQuery(req,"channel") && req.method=="POST"){
        mysqljs.popFromQueue(getQuery(req,"channel"));
+       console.log(cookie.getCookie(req,"nick")+"=="+getQuery(req,"channel"))
+       if(cookie.getCookie(req,"nick")==getQuery(req,"channel")){
        res.writeHead(200,{"Content-Type":"text/plain"});
        res.write("success");
        res.end();
+       }
+       else{
+        res.writeHead(403,{"Content-Type":"text/plain"});
+        res.write("Error: Request is forbidden");
+        res.end(); 
+       }
     }
     else
     if(getQuery(req,"request","getSongs"))

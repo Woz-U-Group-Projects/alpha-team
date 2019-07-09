@@ -34,20 +34,36 @@ exports.createSongRequestTable=function(channel){
   }));
 }
 exports.getSongs=function(table,callback){
+  if(exports.tableExists(table+"_songList",function(_exists){
+    if(_exists){
   con.query("select queue,title,length,likeCount,dislikeCount,songURL,requestedBy from "+mysql.escapeId(table+"_songList"),function(err,result){
     if(err)throw err;
     if(typeof(callback)=="function")
     callback(result);
   });
 }
+else
+  if(typeof(callback)=="function")
+  {
+callback(JSON.parse(JSON.stringify([])));
+  }
+
+  }));
+}
 exports.getQueue=function(table,callback){
+  if(exports.tableExists(table+"_songList",function(_exists){
+    if(_exists){
   con.query("select count(*) as count from "+mysql.escapeId(table+"_songList"),function(err,result){
     if(err)throw err;
     if(typeof(callback=="function"))
     callback(result[0].count+1);
   });
 }
+  }));
+}
 exports.getRequesterFromQueue=function(table,queue,callback){
+  if(exports.tableExists(table+"_songList",function(_exists){
+    if(_exists){
   con.query("select requestedBy from "+mysql.escapeId(table+"_songList")+" where queue=?",queue,function(err,result){
     if(err)throw err;
     if(typeof(callback=="function")){
@@ -61,6 +77,8 @@ exports.getRequesterFromQueue=function(table,queue,callback){
     else
     console.log()
   });
+}
+  }));
 }
 exports.deletefromQueue=function(table,deleteInitiatedBy,deleteQueue,callback){
   exports.getRequesterFromQueue(table,deleteQueue,function(requestedBy){
@@ -135,7 +153,7 @@ exports.getOauth=function(user,callback){
      if((typeof(columns)=="string" && typeof(value)=="string" && columns.split(",").length==value.split(",").length)   ||   (typeof(value)=="object" && (typeof(value[0][0])=="string" || typeof(value[0][0])=="number") && columns.split(",").length==value[0].length)){
      if(typeof(value)=="string" && typeof(columns)=="string" ){
     
-     for(i=0;i<value.length;i++){
+     for(let i=0;i<value.length;i++){
        if(value[i]!=" " || (i>0 && value[i-1]!=",") && (i<value.length && value[i+1]!=","))
        {
          temp+=value[i];
@@ -150,7 +168,7 @@ exports.getOauth=function(user,callback){
   }
 
      temp="";
-     for(i=0;i<columns.length;i++){
+     for(let i=0;i<columns.length;i++){
       if(columns[i]!=" ")
       {
         temp+=columns[i];
@@ -177,7 +195,7 @@ exports.getOauth=function(user,callback){
     else
     {
       console.log("error check that your columns and values match.");
-      for(i=0;i<value[0].length;i++)
+      for(let i=0;i<value[0].length;i++)
       {
         console.log(value[0][i]);
       }
