@@ -1,23 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000000" />
+    
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <link href="css/style.css" rel="stylesheet"> 
+	<script src="javascript/scripts.js"></script> 
+	  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>  
 
-    <title>AlphaQ</title>
-
-    <meta name="description" content="A music player Queue with twitch integration">
-    <meta name="author" content="Stefan, Justin, Joshua, Steven">
-
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="stylesheets/style.css" rel="stylesheet">
-	<script src"javascripts/script.js"> </script> 
-
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>React App</title>
   </head>
   <body>
-
-	<p id="ID"></p>
+<style>
+.button {
+  float: right;
+  text-align: center;
+  display: inline-block;
+  height: 50px;
+  line-height: 50px;
+  padding-right: 30px;
+  padding-left: 70px;
+  position: relative;
+  background-color:rgb(41,127,184);
+  color:rgb(255,255,255);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  
+  
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  text-shadow:0px 1px 0px rgba(0,0,0,0.5);
+-ms-filter:"progid:DXImageTransform.Microsoft.dropshadow(OffX=0,OffY=1,Color=#ff123852,Positive=true)";zoom:1;
+filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=0,OffY=1,Color=#ff123852,Positive=true);
+  -moz-box-shadow:0px 2px 2px rgba(0,0,0,0.2);
+  -webkit-box-shadow:0px 2px 2px rgba(0,0,0,0.2);
+  box-shadow:0px 2px 2px rgba(0,0,0,0.2);
+  -ms-filter:"progid:DXImageTransform.Microsoft.dropshadow(OffX=0,OffY=2,Color=#33000000,Positive=true)";
+filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=0,OffY=2,Color=#33000000,Positive=true);
+}
+.button span {
+  position: absolute;
+  left: 0;
+  width: 50px;
+  background-color:rgba(0,0,0,0.5);
+  
+  -webkit-border-top-left-radius: 5px;
+-webkit-border-bottom-left-radius: 5px;
+-moz-border-radius-topleft: 5px;
+-moz-border-radius-bottomleft: 5px;
+border-top-left-radius: 5px;
+border-bottom-left-radius: 5px;
+border-right: 1px solid  rgba(0,0,0,0.15);
+}
+.button:hover span, .button.active span {
+  background-color:rgb(0,102,26);
+  border-right: 1px solid  rgba(0,0,0,0.3);
+}
+.button:active {
+  margin-top: 2px;
+  margin-bottom: 13px;
+  -moz-box-shadow:0px 1px 0px rgba(255,255,255,0.5);
+-webkit-box-shadow:0px 1px 0px rgba(255,255,255,0.5);
+box-shadow:0px 1px 0px rgba(255,255,255,0.5);
+-ms-filter:"progid:DXImageTransform.Microsoft.dropshadow(OffX=0,OffY=1,Color=#ccffffff,Positive=true)";
+filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=0,OffY=1,Color=#ccffffff,Positive=true);
+}
+.button.purple {
+  background: #8e44ad;
+}
+.btn{
+text-decoration:none;
+color:#333333;
+font-size:12px;
+font-weight:bold;
+padding:0 15px;
+line-height:32px;
+height: auto;
+display:inline-block;
+text-align:center;
+background-color:#DDDDDD;
+}
+.btn.pill {
+  -webkit-border-radius: 16px;
+  -moz-border-radius: 16px;
+  border-radius: 16px;
+}
+body {
+	margin: 5%;
+}
+	
+.tg  {
+	border-collapse:collapse;border-spacing:0;margin:0px auto;
+}
+.tg td
+{
+	font-family:Arial, sans-serif;
+	font-size:14px;
+	padding:10px 5px;
+	border-style:solid;
+	border-width:1px;
+	overflow:hidden;
+	word-break:normal;
+	border-color:black;
+}
+.tg th
+{
+	font-family:Arial, sans-serif;
+	font-size:14px;
+	font-weight:normal;
+	padding:10px 5px;
+	border-style:solid;
+	border-width:1px;
+	overflow:hidden;
+	word-break:normal;
+	border-color:black;
+}
+.tg .tg-0lax
+{
+	text-align:left;
+	vertical-align:top
+}
+@media screen and (max-width: 767px) {
+	
+.tg {width: auto !important;}
+.tg col {
+	width: auto !important;
+}
+.tg-wrap {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	margin: auto 0px;
+}
+}
+</style>
+	<noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+      
+    <p id="ID"></p>
 
 	
     <div class="container-fluid">
@@ -31,7 +174,7 @@
 		</div>
 		<div class="col-md-2" style="float:right;">
 			 
-			<a href="google.com" class="button purple"><span>✓</span>Login With Twitch.tv</a>
+			<a href="google.com" class="button purple" style="font-size: .25em"><span>✓</span>Login</a>
 </div>
 		</div>
 	</div>
@@ -78,67 +221,72 @@
 	<div class="row">
 		<div class="col-md-8">
 		</div>
-		<div class="col-md-2" style='float:center;'>
+		<div class="col-md-2">
 			 
-			<a class="btn pill" href="#">Clear Play list</a>
+			
 		<div class="col-md-2">
 		</div>
 	</div>
-	<div class="row-table" style='
-	border: 1px solid black;
-	background-color: lightblue;
-	padding-top: 10px;
-	padding-right: 10px;
-	padding-bottom: 30px;
-	padding-left: 10px;width:50%;'>
-		<div class="col-md-1" style='float:left; width:10%'>
-			 <span class="badge badge-default">ID</span>
-		</div>
-		<div class="col-md-4" style='float:left; width:20%'>
-			 <span class="badge badge-default">Title</span>
-		</div>
-		<div class="col-md-3" style='float:left; width:20%'>
-			 <span class="badge badge-default">Artist</span>
-		</div>
-		<div class="col-md-1" style='float:left; width:20%'>
-			 <span class="badge badge-default">Likes</span>
-		</div>
-		<div class="col-md-1" style='float:left; width:20%'>
-			 <span class="badge badge-default">Length</span>
-		</div>
-		
+	<a class="btn pill" href="#">Clear Play list</a>
+	<div class"col-md-6" style="text-align: center">
+			
+		<div class="tg-wrap"><table class="tg" id="myTable">
+			
+			<tr>
+			  <th class="tg-0lax">Name</th>
+			  <th class="tg-0lax">User</th>
+			  <th class="tg-0lax">Length</th>
+			  <th class="tg-0lax">Likes</th>
+			  <th class="tg-0lax">DisLikes</th>
+			  <th class="tg-0lax">Other</th>
+			  <th class="tg-0lax">Delete</th>
+			</tr>
+			<tr>
+			  <td class="tg-0lax">What is Love? Baby don't hurt me no more</td>
+			  <td class="tg-0lax"></td>
+			  <td class="tg-0lax"></td>
+			  <td class="tg-0lax"></td>
+			  <td class="tg-0lax"></td>
+			  <td class="tg-0lax"></td>
+			  <td class="tg-0lax"><span style='color:orange'>Delete</span></td>
+			
+			</tr>
+			
+		  </table></div>
+		  <button onclick="myFunction()">Add Song</button>
 	</div>
-	<!--Steps 1: add new row with javascript
-	Steps 2: populate new row with data if someone adds data to Queue-->
-	<div class="row-table" style='
-	border: 1px solid black;
-	background-color: lightblue;
-	padding-top: 10px;
-	padding-right: 10px;
-	padding-bottom: 30px;
-	padding-left: 10px;width:50%;'>
-		<div class="col-md-1" style='float:left; width:10%'>
-			<p id="ID"></p>
-		</div>
-		<div class="col-md-4" style='float:left; width:20%'>
-			 <span class="badge badge-default">What is Love?</span>
-		</div>
-		<div class="col-md-3" style='float:left; width:20%'>
-			 <span class="badge badge-default">Haddaway</span>
-		</div>
-		<div class="col-md-1" style='float:left; width:20%'>
-			 <span class="badge badge-default">306,385</span>
-		</div>
-		<div class="col-md-1" style='float:left; width:20%'>
-			 <span class="badge badge-default">2:46</span>
-		</div>
-		
-	</div>
-</div>
-
- <p id="ID">  </p>
+<script>
+function myFunction() {
+  var table = document.getElementById("myTable");
+  var row = table.insertRow(2);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(1);
+  var cell4 = row.insertCell(1);
+  var cell5 = row.insertCell(1);
+  var cell6 = row.insertCell(1);
+  var cell7 = row.insertCell(1);
+  cell1.innerHTML = "<span style='color:cyan'>Song name";
+  cell2.innerHTML = "<span style='color:orange';>Delete</span>";
+  cell3.innerHTML = "<span style='color:cyan'>blank";
+  cell4.innerHTML = "<span style='color:cyan'>blank";
+  cell5.innerHTML = "<span style='color:cyan'>blank";
+  cell6.innerHTML = "<span style='color:cyan'>blank";
+  cell7.innerHTML = "<span style='color:cyan'>blank";
+  
+}
+</script>
+	
     <script src="javascripts/"></script>
     <script src="javascripts/bootstrap.min.js"></script>
     <script src="javascripts/scripts.js"></script>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
   </body>
 </html>
