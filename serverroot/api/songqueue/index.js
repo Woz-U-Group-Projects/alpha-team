@@ -3,6 +3,7 @@ var mysqljs = require('../../../mysql.js');
 var mysql=require('mysql');
 var cookie=require('../../../cookie.js');
 var youtube=require('../../../youtube.js');
+var disableprotection=process.env.disable_protection=="true";
 function insertSong(res,req,_songqueueData,_youtubeData){//youtubeData will have id, titile, length, views, likeCount, dislikeCount
     
     /*
@@ -13,14 +14,14 @@ function insertSong(res,req,_songqueueData,_youtubeData){//youtubeData will have
     likeCount
     dislikeCount
     */
-        channel=_songqueueData.channel;
-        requestedBy=_songqueueData.requestedBy;
-        songURL="https://www.youtube.com/?v="+_youtubeData.id;
-        title=_youtubeData.title;
-        length=_youtubeData.length;
-        views=_youtubeData.views;
-        likeCount=_youtubeData.likeCount;
-        dislikeCount=_youtubeData.dislikeCount;
+       let channel=_songqueueData.channel;
+       let  requestedBy=_songqueueData.requestedBy;
+       let  songURL="https://www.youtube.com/watch?v="+_youtubeData.id;
+       let title=_youtubeData.title;
+       let length=_youtubeData.length;
+       let views=_youtubeData.views;
+       let  likeCount=_youtubeData.likeCount;
+       let  dislikeCount=_youtubeData.dislikeCount;
         console.log("Id"+_youtubeData.id)
         console.log(_songqueueData);
         console.log(_youtubeData);
@@ -38,9 +39,13 @@ function insertSong(res,req,_songqueueData,_youtubeData){//youtubeData will have
                        console.log("url "+songURL);
                         if(requestedBy && title && songURL)
                         {
-                            URL=url.parse(songURL);
+                           let URL=url.parse(songURL);
                             if(URL.host=="youtube.com" || URL.host=="www.youtube.com"){
-                                if(requestedBy==cookie.getCookie(req,"nick")){
+                                if(requestedBy==cookie.getCookie(req,"nick")||disableprotection){
+                                    if(requestedBy!=cookie.getCookie(req,"nick")&&disableprotection)
+                                    {
+                                        console.warn("User permissions override setting allowed "+cookie.getCookie(req,"nick")+" access to a restricted function that would have otherwise been denied.");
+                                    }
                             console.log("attempting to insert data");
                             var channel=getQuery(req,"channel")
                             mysqljs.getQueue(channel,function(_queue){
@@ -95,11 +100,11 @@ function insertSong(res,req,_songqueueData,_youtubeData){//youtubeData will have
 }
 function getQuery(req,query,equals){
     query=query.toLowerCase();
-    var urlQuery=url.parse(req.url,true).query;console.log(urlQuery);
-    var searchQuery=JSON.parse(JSON.stringify(urlQuery).toLowerCase());
+    let urlQuery=url.parse(req.url,true).query;
+    let searchQuery=JSON.parse(JSON.stringify(urlQuery).toLowerCase());
     if(searchQuery[query]){
-        var temp="";
-        for(i=0;i<query.length;i++){
+        let  temp="";
+        for(let i=0;i<query.length;i++){
     temp+=JSON.stringify(urlQuery)[JSON.stringify(searchQuery).search(query)+i];
         }
         if(equals){
@@ -111,9 +116,13 @@ function getQuery(req,query,equals){
     else return false;
 }
 exports.start=function(req,res){
+    console.log("songqueue"); 
     if(getQuery(req,"request","addTable"))
     {
-        if(getQuery(req,"user")==cookie.getCookie(req,"nick")){
+        if(getQuery(req,"user")==cookie.getCookie(req,"nick")||disableprotection){
+            if(getQuery(req,"user")!=cookie.getCookie(req,"nick") && disableprotection){
+                console.warn("User permissions override setting allowed "+cookie.getCookie(req,"nick")+" access to a restricted function that would have otherwise been denied.");
+            }
 mysqljs.createSongRequestTable(getQuery(req,"user"));
 res.writeHead(200,{"Content-Type":"text/plain"});
 res.write("Table added");
@@ -130,7 +139,10 @@ res.end();
     if(getQuery(req,"request","insertSong")&& getQuery(req,"channel") && req.method=="POST"){
 
        console.log(req.body);
-        if(req.body["requestedBy"]){
+        if(req.body["requestedBy"]==cookie.getCookie(req,"nick")||disableprotection){
+            if(req.body["requestedBy"]!=cookie.getCookie(req,"nick")&&disableprotection){
+                console.warn("User permissions override setting allowed "+cookie.getCookie(req,"nick")+" access to a restricted function that would have otherwise been denied.");
+            }
             if(req.body["url"]){
                 let url=req.body["url"];
                 youtube.getVideoDetails(url,function(_data){
@@ -148,14 +160,34 @@ res.end();
                     });
                 }
             }
+            else{
+                        res.writeHead(403,{"Content-Type":"text/plain"});
+                        res.write("Forbidden user not authorized.");
+                        res.end();
+            }
         }
         
     else
     if(getQuery(req,"request","popfromqueue") && getQuery(req,"channel") && req.method=="POST"){
-       mysqljs.popFromQueue(getQuery(req,"channel"));
-       res.writeHead(200,{"Content-Type":"text/plain"});
-       res.write("success");
-       res.end();
+       
+       console.log(cookie.getCookie(req,"nick")+"=="+getQuery(req,"channel"))
+       if(cookie.getCookie(req,"nick")==getQuery(req,"channel")||disableprotection){
+        if(getQuery(req,"channel")!=cookie.getCookie(req,"nick") && disableprotection){
+            console.warn("User permissions override setting allowed "+cookie.getCookie(req,"nick")+" access to a restricted function that would have otherwise been denied.");
+        }
+        mysqljs.popFromQueue(getQuery(req,"channel"),function(){
+            res.writeHead(200,{"Content-Type":"text/plain"});
+            res.write("success");
+            console.log("pop from queue successful.");
+            res.end();
+        });
+       
+       }
+       else{
+        res.writeHead(403,{"Content-Type":"text/plain"});
+        res.write("Error: Request is forbidden");
+        res.end(); 
+       }
     }
     else
     if(getQuery(req,"request","getSongs"))
@@ -179,17 +211,27 @@ res.end();
     else
     if(getQuery(req,"request","deleteSong") && req.method=="POST")
     {
+        console.log("deleteSong");
          if(req.body["requestedBy"] && req.body["queue"] && getQuery(req,"channel")){
              var deleteInitiatedBy=req.body["requestedBy"];
              //initiated 
              var deleteQueue=req.body["queue"];
              var channel=getQuery(req,"channel");
              mysqljs.getQueue(channel,function(queue){
-                
-                if(deleteQueue<queue && deleteQueue>0){
+                console.log("deleteQueue: "+deleteQueue);
+                console.log("queue: "+queue);
+                if(deleteQueue<=queue && deleteQueue>0){
+                    console.log("attempting to delete song.")
              mysqljs.getRequesterFromQueue(channel,deleteQueue,function(requestedBy){
-             if(deleteInitiatedBy==cookie.getCookie(req,"nick") && (deleteInitiatedBy==channel||deleteInitiatedBy==requestedBy))
+                 console.log("requestedBy: "+requestedBy);
+             if(deleteInitiatedBy==cookie.getCookie(req,"nick") && ((deleteInitiatedBy==channel||deleteInitiatedBy==requestedBy))||disableprotection)
              {
+                 console.log("user authorized to delete song.");
+                if(disableprotection&&(deleteInitiatedBy=cookie.getCookie(req,"nick") && (deleteInitiatedBy==channel||deleteInitiatedBy==requestedBy)==false))
+                {
+                    console.warn("User permissions override setting allowed "+cookie.getCookie(req,"nick")+" access to a restricted function that would have otherwise been denied.");
+                    deleteInitiatedBy=requestedBy;
+                }
              mysqljs.deletefromQueue(channel,deleteInitiatedBy,deleteQueue,function(_success){
                  if(_success)
                  {

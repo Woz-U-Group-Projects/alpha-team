@@ -7,5 +7,5 @@ if(query["getTest"]!=undefined)//if query getTest is not undefined it exists exa
 console.log("test paramater value: "+query["getTest"]);//this is just a template so we just have a simple command for now.
 res.write("test paramater value: "+query["getTest"]); //we are simply displaying this to the screen but we can do more api things later.
 }
-res.end();
+res.end("api test page.");
 }

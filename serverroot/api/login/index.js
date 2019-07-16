@@ -14,7 +14,7 @@ function getQuery(req,query,equals){
     var searchQuery=JSON.parse(JSON.stringify(urlQuery).toLowerCase());
     if(searchQuery[query]){
         var temp="";
-        for(i=0;i<query.length;i++){
+        for(let i=0;i<query.length;i++){
     temp+=JSON.stringify(urlQuery)[JSON.stringify(searchQuery).search(query)+i];
         }
         if(equals){
@@ -29,8 +29,9 @@ exports.start=function(req,res){
     var Url=url.parse(req.url,true);//gets url
     var query=Url.query;//gets the queries in the url
     var request;
-    var redirect_uri="http://localhost/api/login";
+    var redirect_uri="http://alphateam.justinkkennedy.com/api/login";
     var client_id=process.env.client_id;
+    var code;
     console.log(query);
     if(req.method=="GET"){
     if(request=getQuery(req,"request"))//if query getTest is not undefined it exists example: localhost/api?getTest=1 and the value is stored in the query[name_of_query]
@@ -49,7 +50,7 @@ exports.start=function(req,res){
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='+client_id+'&redirect_uri='+redirect_uri+'&scope=user_read&force_verify=true');
             }
-        }
+        }        
         else
         if(request=="isloggedin"){
             console.log("cookie: "+req.header("cookie"));
@@ -58,7 +59,7 @@ exports.start=function(req,res){
                 console.log("request isloggedin stored in cookie user:"+username)
                 //twitch.validateOAuth
                 twitch.validateOAuth(cookie.getCookie(req,"oauth"),function(result,status){
-                    json=JSON.parse(result);
+                   var json=JSON.parse(result);
                 if(status==200 && json["login"].toLowerCase()==username.toLowerCase()){
                     var user=getQuery(req,"user");
                 if(!user || user.toLowerCase()==username.toLowerCase()){
@@ -78,6 +79,9 @@ exports.start=function(req,res){
                         cookie.removeCookie(req,"nick");
                         cookie.removeCookie(req,"oauth");
                         cookie.endSession();
+                        res.writeHead(200, {'Content-Type': 'text/plain'});
+                res.write("false");
+                res.end();
                     }
                 }
 
@@ -112,7 +116,7 @@ else
     if((code=query["code"])!=undefined && typeof(code)=="string"){
         var client_secret=process.env.client_secret;
         var OAuth;
-        
+        var json;
         var username;
         var data = JSON.stringify({client_id: client_id,client_secret: client_secret,grant_type: 'authorization_code',redirect_uri: redirect_uri,code: code});
         var sentResponse=false;
@@ -124,7 +128,7 @@ else
         
         twitch.validateOAuth(OAuth,function(result,status){
             if(status==200){
-            json=JSON.parse(result);
+           json=JSON.parse(result);
             username=json["login"];
             if(cookie.isCookie(req,"oauth"))
             cookie.updateCookie(req,"oauth",OAuth);
@@ -136,6 +140,7 @@ else
             cookie.addCookie(req,"nick",username);
             cookie.save(req);
             console.log("OAuth:"+cookie.getCookie(req,"oauth")+"\nNICK: "+cookie.getCookie(req,"nick")); 
+            mysql.createSongRequestTable(cookie.getCookie(req,"nick"));
             //todo invalidate previous oauth token
             mysql.getOauth(username,function(old_auth){
                 console.log("old_auth:"+old_auth);
@@ -151,6 +156,7 @@ else
             //todo insert into database
             console.log("attempting to insert oauth");
             mysql.insertIntoTable("oauth","auth,nick",OAuth+","+username);
+            
      }
      else{
          console.log("attempting to update oauth");
@@ -158,8 +164,9 @@ else
      }
          });
             //end insert into database
-                res.write("dynamic webpage");
-                   res.end();
+            
+            res.writeHead(302,{"Location":"/songlist"});
+            res.end();
                    sentResponse=true;
                    return false;
         }
@@ -171,11 +178,21 @@ else
             }
             else{
                 if(sentResponse)
-                {return false;} 
-            sentResponse=true;
-            res.write("Error server responded with "+status);
-             res.end();
-             return false;
+                {return false;}
+                if(status==404&&process.env.serverSecondaryMethod!="true")
+                {
+                    //res.write("Twitch responded with page not found.\nReattempting");
+                    process.env.serverSecondaryMethod="true";
+                    exports.start(req,res);
+                    
+                }
+                else{
+                    sentResponse=true;
+                    res.write("Error server responded with "+status);
+                     res.end();
+                     return false;
+                }
+            
              
             
             }
@@ -193,6 +210,51 @@ else
             req.headers["Content-Type"]="application/json";
             //req.method="POST";
         }
+        if(getQuery(req,"request","getloggedinuser") && req.body["session"]){
+            var nick;
+            var oauth;
+            let _sessionID;
+            console.log("request body: "+JSON.stringify(req.body));
+            console.log("cookie: "+req.header("cookie"));
+                console.log("session set");
+                _sessionID=req.body["session"].slice(4).split(".")[0];
+                cookie.getSession(_sessionID,function(err,session){ 
+                    nick=session.nick;
+                    oauth=session.oauth;
+                    console.log(nick);
+                    console.log(oauth);
+                
+            
+            if(nick&&oauth){
+            twitch.validateOAuth(oauth,function(_result,status){
+            if(status==200){
+                res.writeHead(200,{"Content-Type":"text/plain"});
+            res.end(nick);
+            }
+            else if(status==401&&_result.message=="invalid access token"){
+                cookie.removeCookie(req,"nick");
+                cookie.removeCookie(req,"oauth");
+                cookie.save();
+                cookie.endSession();
+                res.writeHead(403,{"Content-Type":"text/plain"});
+                res.end("User not logged in.");
+
+            }
+            else{
+            res.writeHead(403,{"Content-Type":"text/plain"});
+            res.end("User not logged in.");
+            }
+        });
+
+    }
+    else{
+        res.writeHead(403,{"Content-Type":"text/plain"});
+        res.end("User not logged in.");
+        }
+    })
+            
+        }
+        else
         if(getQuery(req,"request","getloggedinuser")){
             if(cookie.isCookie(req,"nick")&&cookie.isCookie(req,"oauth")){
             twitch.validateOAuth(cookie.getCookie(req,"oauth"),function(_result,status){
@@ -224,6 +286,7 @@ else
         }
         else
         if(getQuery(req,"request","isloggedin")){
+            var json;
             console.log("Method: "+req.method);
             console.log("request headers: "+JSON.stringify(req.headers));
             console.log("request=isloggedin");

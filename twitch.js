@@ -46,8 +46,47 @@ req.end();
 
 exports.postSSL=function(Url,data,callback)
 {
-    Url=url.parse(Url,true);
-var options = {
+  Url=url.parse(Url,true);
+  var options
+  if(process.env.serverSecondaryMethod=="true")
+  {
+    process.env.serverSecondaryMethod="false";
+    console.log("secondary round started.");
+      Url.search="?";
+      let temp;
+      console.log(data);
+      let json=JSON.parse(data);
+      let properties=Object.getOwnPropertyNames(json); 
+    console.log(properties)
+      
+      for(let i=0;i<properties.length;i++){
+        temp=json[properties[i]];
+        if(typeof(temp)=="object"){
+          temp=encodeURIComponent(JSON.stringify(temp));
+        }
+        Url.search+=properties[i]+"="+temp;
+        if(i!=properties.length-1){
+          Url.search+="&";
+        }
+      }
+      
+          console.log(Url.search);
+      options = {
+        host: Url.host,
+        port: 443,
+        path: Url.pathname+Url.search,
+        method: 'POST',
+        headers:{
+          "Content-Length":0
+        }
+        
+           
+      };
+      console.log("requesting resource:"+Url.host+Url.pathname+Url.search+":443");
+  }
+    else
+    {
+options = {
   host: Url.host,
   port: 443,
   path: Url.pathname+Url.search,
@@ -59,6 +98,8 @@ var options = {
      
 };
 console.log("requesting resource:"+Url.host+Url.pathname+":443");
+
+}
 var req = https.request(options, function(res) {
   console.log('STATUS: ' + res.statusCode);
   console.log('HEADERS: ' + JSON.stringify(res.headers));
